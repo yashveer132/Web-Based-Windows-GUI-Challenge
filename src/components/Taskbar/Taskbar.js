@@ -5,46 +5,46 @@ import {
   faWifi,
   faVolumeUp,
   faBatteryFull,
+  faBell,
+  faLock,
+  faPlane,
+  faMoon,
 } from "@fortawesome/free-solid-svg-icons";
 import { faWindows } from "@fortawesome/free-brands-svg-icons";
+import { faBluetoothB } from "@fortawesome/free-brands-svg-icons";
 
 const TaskbarContainer = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 40px;
-  background-color: var(--taskbar-bg);
+  height: 55px;
+  background-color: #1e1e2f;
   display: flex;
   align-items: center;
   padding: 0 10px;
-
-  /* Responsive adjustment */
-  @media (max-width: 600px) {
-    height: 32px;
-  }
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
 `;
 
 const StartButton = styled.button`
-  background-color: var(--taskbar-button-bg);
+  background-color: #2a2a3d;
   border: none;
-  padding: 8px 12px;
-  font-weight: bold;
+  padding: 15px 25px;
   display: flex;
   align-items: center;
   cursor: pointer;
-  color: var(--text-color);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: var(--taskbar-button-active);
-  }
-
-  &:active {
-    opacity: 0.7;
+    background-color: #4a4a5e;
   }
 
   @media (max-width: 600px) {
-    padding: 5px 8px;
+    padding: 10px 15px;
   }
 `;
 
@@ -53,37 +53,30 @@ const TaskbarItems = styled.div`
   margin-left: 10px;
   flex: 1;
   overflow-x: auto;
+  gap: 5px;
 
   &::-webkit-scrollbar {
     display: none;
   }
 `;
 
-const TaskbarItem = styled.button`
-  background-color: ${(props) => {
-    if (props.isMinimized) return "#555";
-    return props.isActive
-      ? "var(--window-title-active)"
-      : "var(--taskbar-button-bg)";
-  }};
-  border: none;
-  padding: 5px 10px;
-  margin-right: 5px;
+const TaskbarItem = styled.div`
+  position: relative;
+  background-color: ${(props) => (props.isActive ? "#4a4a5e" : "#2a2a3d")};
+  padding: 8px 12px;
+  border-radius: 5px;
+  color: white;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.3s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px;
-  flex-shrink: 0;
-  color: #fff;
 
   &:hover {
-    background-color: var(--taskbar-button-active);
-  }
-
-  @media (max-width: 600px) {
-    padding: 3px 6px;
-    max-width: 100px;
+    background-color: #5a5a6e;
   }
 `;
 
@@ -95,12 +88,32 @@ const SystemTray = styled.div`
 
 const TrayIcon = styled.div`
   margin-left: 10px;
-  font-size: 14px;
+  font-size: 18px;
   cursor: pointer;
-  color: var(--text-color);
+  color: white;
+  transition: opacity 0.3s ease;
+  position: relative;
 
   &:hover {
     opacity: 0.8;
+  }
+
+  &::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 30px;
+    left: -10px;
+    background-color: #333;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    display: none;
+    white-space: nowrap;
+  }
+
+  &:hover::after {
+    display: block;
   }
 
   @media (max-width: 600px) {
@@ -110,27 +123,52 @@ const TrayIcon = styled.div`
 
 const Clock = styled.div`
   margin-left: 10px;
-  font-size: 12px;
-  color: var(--text-color);
+  font-size: 14px;
+  color: white;
+  background-color: #2a2a3d;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
 
   @media (max-width: 600px) {
-    margin-left: 5px;
-    font-size: 10px;
+    font-size: 12px;
   }
 `;
 
-const Taskbar = ({ onStartClick, windows, activeWindowId, onWindowClick }) => {
+const Taskbar = ({
+  onStartClick,
+  windows,
+  activeWindowId,
+  onWindowClick,
+  closeWindow,
+}) => {
   const [time, setTime] = useState(new Date());
+  const [isConnected, setIsConnected] = useState(true);
+  useEffect(() => {
+    const networkSimulation = setInterval(() => {
+      setIsConnected((prevState) => !prevState);
+    }, 5000);
+
+    return () => clearInterval(networkSimulation);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  const toggleWindow = (windowId) => {
+    if (activeWindowId === windowId) {
+      closeWindow(windowId);
+    } else {
+      onWindowClick(windowId);
+    }
+  };
+
   return (
-    <TaskbarContainer className="taskbar-container">
+    <TaskbarContainer>
       <StartButton onClick={onStartClick}>
-        <FontAwesomeIcon icon={faWindows} style={{ marginRight: "5px" }} />
+        <FontAwesomeIcon icon={faWindows} style={{ marginRight: "10px" }} />
         Start
       </StartButton>
 
@@ -139,8 +177,7 @@ const Taskbar = ({ onStartClick, windows, activeWindowId, onWindowClick }) => {
           <TaskbarItem
             key={window.id}
             isActive={window.id === activeWindowId}
-            isMinimized={window.isMinimized}
-            onClick={() => onWindowClick(window.id)}
+            onClick={() => toggleWindow(window.id)}
           >
             {window.title}
           </TaskbarItem>
@@ -148,18 +185,27 @@ const Taskbar = ({ onStartClick, windows, activeWindowId, onWindowClick }) => {
       </TaskbarItems>
 
       <SystemTray>
-        <TrayIcon title="Network Status">
+        <TrayIcon data-tooltip="Wi-Fi Connected">
           <FontAwesomeIcon icon={faWifi} />
         </TrayIcon>
-
-        <TrayIcon title="Volume">
+        <TrayIcon data-tooltip="Volume: Medium">
           <FontAwesomeIcon icon={faVolumeUp} />
         </TrayIcon>
-
-        <TrayIcon title="Battery">
+        <TrayIcon data-tooltip="Battery Fully Charged">
           <FontAwesomeIcon icon={faBatteryFull} />
         </TrayIcon>
-        <Clock>{time.toLocaleTimeString()}</Clock>
+        <TrayIcon data-tooltip="Bluetooth Enabled">
+          <FontAwesomeIcon icon={faBluetoothB} />
+        </TrayIcon>
+        <TrayIcon data-tooltip="Airplane Mode Off">
+          <FontAwesomeIcon icon={faPlane} />
+        </TrayIcon>
+        <TrayIcon data-tooltip="2 Notifications">
+          <FontAwesomeIcon icon={faBell} />
+        </TrayIcon>
+        <Clock>
+          {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        </Clock>
       </SystemTray>
     </TaskbarContainer>
   );

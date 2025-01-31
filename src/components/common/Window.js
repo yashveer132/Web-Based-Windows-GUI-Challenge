@@ -98,26 +98,23 @@ const Window = ({
 
   return (
     <StyledRnd
-  default={{
-    x,
-    y,
-    width,
-    height,
-  }}
-  minWidth={300}
-  minHeight={200}
-  bounds="window"  // Allow spanning the full viewport
-  onMouseDown={onFocus}
-  isActive={isActive}
-  enableResizing={!maximized}
-  disableDragging={maximized}
-  size={
-    maximized ? { width: "100vw", height: "100vh" } : undefined
-  }
-  position={maximized ? { x: 0, y: 0 } : undefined}
-  style={{ zIndex: isActive ? 999 : 998 }}
->
-
+      default={{
+        x,
+        y,
+        width,
+        height,
+      }}
+      minWidth={300}
+      minHeight={200}
+      bounds="window"
+      onMouseDown={onFocus}
+      isActive={isActive}
+      enableResizing={!maximized}
+      disableDragging={maximized}
+      size={maximized ? { width: "100vw", height: "100vh" } : undefined}
+      position={maximized ? { x: 0, y: 0 } : undefined}
+      style={{ zIndex: isActive ? 999 : 998 }}
+    >
       <TitleBar isActive={isActive}>
         <Title>{title}</Title>
         <ButtonGroup>

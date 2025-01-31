@@ -5,41 +5,82 @@ import html2canvas from "html2canvas";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: var(--window-bg);
-  color: var(--text-color);
-  height: 100%;
-  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #1e1e2f;
+  color: white;
+  font-family: "Arial, sans-serif";
+  padding: 20px;
+  gap: 20px;
 `;
 
 const Instructions = styled.div`
-  margin-bottom: 10px;
+  text-align: center;
+  line-height: 1.8;
 `;
 
 const CropOverlay = styled.div`
-  position: absolute;
-  border: 2px dashed #ff0000;
+  position: fixed;
+  border: 2px dashed #ff4f4f;
   pointer-events: none;
+  background-color: rgba(255, 0, 0, 0.1);
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
 `;
 
 const CaptureButton = styled.button`
-  margin-right: 5px;
-  padding: 6px 12px;
-  background-color: var(--button-bg);
-  border: 1px solid var(--button-border);
-  color: var(--text-color);
+  padding: 12px 20px;
+  background-color: #4a90e2;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1rem;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+
   &:hover {
-    opacity: 0.8;
+    background-color: #357ab7;
+  }
+`;
+
+const ResetButton = styled(CaptureButton)`
+  background-color: #d9534f;
+
+  &:hover {
+    background-color: #c9302c;
+  }
+`;
+
+const DownloadButton = styled(CaptureButton)`
+  background-color: #5cb85c;
+
+  &:hover {
+    background-color: #4cae4c;
   }
 `;
 
 const Preview = styled.div`
-  margin-top: 10px;
-  border: 1px solid var(--window-border);
-  background-color: #222;
+  width: 80%;
+  max-width: 800px;
   text-align: center;
+  margin-top: 20px;
+  border: 1px solid #333;
+  background-color: #29293d;
+  border-radius: 8px;
+  padding: 15px;
+  line-height: 1.6;
+
   img {
-    max-width: 100%;
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: 5px;
   }
 `;
 
@@ -73,6 +114,8 @@ export default function ScreenCaptureTool({
     const handleMouseUp = () => {
       if (isCropping) {
         setIsCropping(false);
+        if (addNotification)
+          addNotification("Cropping completed. Click 'Capture' to save.");
       }
     };
 
@@ -85,7 +128,7 @@ export default function ScreenCaptureTool({
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isCropping, startPos]);
+  }, [isCropping, startPos, addNotification]);
 
   useEffect(() => {
     if (!overlayRef.current) return;
@@ -104,9 +147,8 @@ export default function ScreenCaptureTool({
     setIsCropping(true);
     setStartPos(null);
     setCropRect(null);
-    if (addNotification) {
-      addNotification("Draw a rectangle on screen for capture.");
-    }
+    if (addNotification)
+      addNotification("Draw a rectangle on the screen for capture.");
   };
 
   const capture = async () => {
@@ -148,26 +190,43 @@ export default function ScreenCaptureTool({
     }
   };
 
+  const downloadCapture = () => {
+    if (!previewImg) return;
+    const link = document.createElement("a");
+    link.href = previewImg;
+    link.download = "screencapture.png";
+    link.click();
+  };
+
   return (
     <Container>
       <Instructions>
+        <h2>Screen Capture Tool</h2>
+        <p>1) Click "Start Cropping" to draw a selection.</p>
+        <p>2) Once selected, click "Capture" to take a screenshot.</p>
+        <p>3) Download or view the capture in the preview section below.</p>
+      </Instructions>
+
+      <ButtonContainer>
         <CaptureButton onClick={startCrop}>Start Cropping</CaptureButton>
         <CaptureButton onClick={capture}>Capture</CaptureButton>
-        <p>1) Click "Start Cropping"</p>
-        <p>2) Drag on the screen to select a region</p>
-        <p>3) Click "Capture" to finalize</p>
-      </Instructions>
+        <ResetButton onClick={() => setCropRect(null)}>Reset</ResetButton>
+        {previewImg && (
+          <DownloadButton onClick={downloadCapture}>
+            Download Capture
+          </DownloadButton>
+        )}
+      </ButtonContainer>
+
       <Preview>
         {previewImg ? (
-          <img src={previewImg} alt="capture" />
+          <img src={previewImg} alt="Screen capture preview" />
         ) : (
-          <p>No capture yet.</p>
+          <p>No captures yet.</p>
         )}
       </Preview>
-      <CropOverlay
-        ref={overlayRef}
-        style={{ display: "none", position: "absolute" }}
-      />
+
+      <CropOverlay ref={overlayRef} style={{ display: "none" }} />
     </Container>
   );
 }

@@ -5,73 +5,166 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSearch,
+  faPowerOff,
+  faSyncAlt,
+  faMoon,
+  faSignOutAlt,
+} from "@fortawesome/free-solid-svg-icons";
+
+const slideUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 const MenuContainer = styled.div`
   position: absolute;
-  bottom: 40px;
-  left: 0;
-  width: 300px;
-  background-color: var(--window-bg);
-  border: 1px solid var(--window-border);
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  bottom: 50px;
+  left: 10px;
+  width: 340px;
+  background-color: #1e1e2f;
+  border-radius: 10px;
+  border: 1px solid #333;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  animation: ${slideUp} 0.3s ease-out forwards;
   display: ${(props) => (props.isOpen ? "flex" : "none")};
   flex-direction: column;
   z-index: 1000;
+  overflow: hidden;
 
   @media (max-width: 600px) {
-    width: 220px;
-    bottom: 32px;
+    width: 260px;
   }
 `;
 
 const SearchBar = styled.div`
   display: flex;
   align-items: center;
-  padding: 5px;
-  background-color: var(--taskbar-bg);
+  padding: 10px;
+  background-color: #333;
+  gap: 10px;
 `;
 
 const SearchInput = styled.input`
   flex: 1;
-  margin-left: 10px;
-  padding: 5px;
-  border: 1px solid var(--window-border);
-  background-color: #1e1e1e;
-  color: var(--text-color);
+  padding: 8px;
+  border: none;
+  background-color: #1e1e2f;
+  color: white;
+  border-radius: 5px;
+  font-size: 0.9rem;
 
-  @media (max-width: 600px) {
-    padding: 3px;
+  &:focus {
+    outline: none;
+    border: 1px solid #4a90e2;
   }
 `;
 
 const MenuItems = styled.div`
-  max-height: 400px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+  max-height: 300px;
   overflow-y: auto;
 `;
 
 const MenuItem = styled.div`
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #29293d;
+  padding: 15px;
+  border-radius: 8px;
   cursor: pointer;
-  color: var(--text-color);
+  color: white;
+  font-size: 0.85rem;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  height: 90px;
 
   &:hover {
-    background-color: var(--taskbar-button-active);
+    background-color: #4a4a5e;
+  }
+
+  .emoji {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+  }
+`;
+
+const RecentAppsSection = styled.div`
+  padding: 10px;
+  background-color: #333;
+  border-top: 1px solid #444;
+`;
+
+const RecentApp = styled.div`
+  padding: 5px;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #4a4a5e;
   }
 `;
 
 const UserSection = styled.div`
   padding: 10px;
-  border-top: 1px solid var(--window-border);
-  color: var(--text-color);
+  background-color: #29293d;
+  color: white;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #444;
+`;
+
+const LogoutButton = styled.div`
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 1rem;
+
+  &:hover {
+    color: #ff4f4f;
+  }
+`;
+
+const PowerOptions = styled.div`
+  display: flex;
+  gap: 15px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    &:hover {
+      color: #ff4f4f;
+    }
+  }
 `;
 
 const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [recentApps, setRecentApps] = useState([]);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -101,15 +194,23 @@ const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
   const handleItemClick = useCallback(
     (app) => {
       app.onClick();
+      setRecentApps((prev) =>
+        [app, ...prev.filter((a) => a.id !== app.id)].slice(0, 5)
+      );
       onClose();
     },
     [onClose]
   );
 
+  const handlePowerOption = (option) => {
+    if (option === "logout") onLogout();
+    alert(`${option} initiated!`);
+  };
+
   return (
     <MenuContainer ref={menuRef} isOpen={isOpen}>
       <SearchBar>
-        <FontAwesomeIcon icon={faSearch} color="#fff" />
+        <FontAwesomeIcon icon={faSearch} color="white" />
         <SearchInput
           type="text"
           placeholder="Search apps..."
@@ -121,16 +222,31 @@ const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
       <MenuItems>
         {filteredApps.map((app) => (
           <MenuItem key={app.id} onClick={() => handleItemClick(app)}>
-            {app.title}
+            <div className="emoji">{app.emoji}</div>
+            <div>{app.title}</div>
           </MenuItem>
         ))}
       </MenuItems>
 
       <UserSection>
         <div>{currentUser?.name}</div>
-        <div style={{ cursor: "pointer" }} onClick={onLogout}>
-          Log out
-        </div>
+        <LogoutButton onClick={onLogout}>
+          <FontAwesomeIcon icon={faSignOutAlt} /> Log Out
+        </LogoutButton>
+      </UserSection>
+
+      <UserSection>
+        <PowerOptions>
+          <div onClick={() => handlePowerOption("sleep")}>
+            <FontAwesomeIcon icon={faMoon} /> Sleep
+          </div>
+          <div onClick={() => handlePowerOption("restart")}>
+            <FontAwesomeIcon icon={faSyncAlt} /> Restart
+          </div>
+          <div onClick={() => handlePowerOption("shutdown")}>
+            <FontAwesomeIcon icon={faPowerOff} /> Shut Down
+          </div>
+        </PowerOptions>
       </UserSection>
     </MenuContainer>
   );

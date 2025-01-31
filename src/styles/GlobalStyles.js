@@ -8,14 +8,30 @@ const GlobalStyles = createGlobalStyle`
     --window-title-active: ${({ theme }) => theme.windowTitleActive};
     --window-title-inactive: ${({ theme }) => theme.windowTitleInactive};
     --text-color: ${({ theme }) => theme.textColor};
-    --button-bg: ${({ theme }) => theme.windowBorder}; 
+    --button-bg: ${({ theme }) => theme.buttonBg}; 
     --button-border: ${({ theme }) => theme.windowBorder};
     --taskbar-bg: ${({ theme }) => theme.desktopBg};
     --taskbar-button-bg: ${({ theme }) => theme.windowBg};
-    --taskbar-button-active: rgba(255,255,255,0.2);
+    --taskbar-button-active: rgba(255, 255, 255, 0.2);
     --icon-bg: rgba(255, 255, 255, 0.2);
     --notification-bg: ${({ theme }) => theme.windowBg};
     --notification-text: ${({ theme }) => theme.textColor};
+
+    /* Theme hover effects */
+    --dark-hover: #333;
+    --dark-text-hover: #fff;
+
+    --light-hover: #ddd;
+    --light-text-hover: #000;
+
+    --classic-hover: #c4a484;
+    --classic-text-hover: #fff;
+
+    --pastel-hover: #f3d3e7;
+    --pastel-text-hover: #5c2a5d;
+
+    --pink-hover: #ffb6c1;
+    --pink-text-hover: #6a1b4d;
   }
 
   * {

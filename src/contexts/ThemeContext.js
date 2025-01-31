@@ -19,15 +19,6 @@ const THEMES = {
     windowTitleInactive: "#aaaaaa",
     textColor: "#333333",
   },
-  blue: {
-    name: "blue",
-    desktopBg: "#336699",
-    windowBg: "#e6f2ff",
-    windowBorder: "#336699",
-    windowTitleActive: "#0055cc",
-    windowTitleInactive: "#99bbdd",
-    textColor: "#ffffff",
-  },
   classic: {
     name: "classic",
     desktopBg: "#008080",
@@ -36,24 +27,6 @@ const THEMES = {
     windowTitleActive: "#000080",
     windowTitleInactive: "#808080",
     textColor: "#000000",
-  },
-  purple: {
-    name: "purple",
-    desktopBg: "#4b0082",
-    windowBg: "#eae4f2",
-    windowBorder: "#8a2be2",
-    windowTitleActive: "#7b68ee",
-    windowTitleInactive: "#b19cd9",
-    textColor: "#ffffff",
-  },
-  green: {
-    name: "green",
-    desktopBg: "#006400",
-    windowBg: "#e0f2e9",
-    windowBorder: "#008000",
-    windowTitleActive: "#228B22",
-    windowTitleInactive: "#90ee90",
-    textColor: "#ffffff",
   },
   pastel: {
     name: "pastel",
@@ -64,15 +37,6 @@ const THEMES = {
     windowTitleInactive: "#fcd2c2",
     textColor: "#444444",
   },
-  highContrast: {
-    name: "highContrast",
-    desktopBg: "#000000",
-    windowBg: "#ffffff",
-    windowBorder: "#ffff00",
-    windowTitleActive: "#ff00ff",
-    windowTitleInactive: "#aaaaaa",
-    textColor: "#00ff00",
-  },
   pink: {
     name: "pink",
     desktopBg: "#ffc0cb",
@@ -81,15 +45,6 @@ const THEMES = {
     windowTitleActive: "#ff69b4",
     windowTitleInactive: "#ffb6c1",
     textColor: "#5e004f",
-  },
-  matrix: {
-    name: "matrix",
-    desktopBg: "#000000",
-    windowBg: "#0a0a0a",
-    windowBorder: "#00ff00",
-    windowTitleActive: "#00ff00",
-    windowTitleInactive: "#005500",
-    textColor: "#00ff00",
   },
 };
 
@@ -107,8 +62,15 @@ export function ThemeContextProvider({ initialTheme = "dark", children }) {
     setThemeName(newTheme);
   };
 
+  const applyRandomTheme = () => {
+    const themeNames = Object.keys(THEMES);
+    const randomTheme = themeNames[Math.floor(Math.random() * themeNames.length)];
+    setThemeName(randomTheme);
+    setTheme(THEMES[randomTheme]);
+  };
+
   return (
-    <ThemeContext.Provider value={{ themeName, theme, changeTheme }}>
+    <ThemeContext.Provider value={{ themeName, theme, changeTheme, applyRandomTheme }}>
       {children}
     </ThemeContext.Provider>
   );
