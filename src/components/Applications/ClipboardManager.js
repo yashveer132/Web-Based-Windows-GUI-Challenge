@@ -4,26 +4,89 @@ import styled from "styled-components";
 const ManagerContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: var(--window-bg);
-  color: var(--text-color);
-  height: 100%;
-  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  background-color: #1e1e2f;
+  color: #ffffff;
+  height: 100vh;
+  padding: 20px;
+  font-family: "Arial, sans-serif";
+`;
+
+const Title = styled.h2`
+  font-size: 2rem;
+  margin-bottom: 10px;
+`;
+
+const Instructions = styled.p`
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #aaaaaa;
 `;
 
 const ClipboardList = styled.ul`
   flex: 1;
+  width: 100%;
+  max-width: 400px;
   overflow-y: auto;
   margin-top: 10px;
+  list-style-type: none;
+  padding: 0;
 `;
 
 const ClipboardItem = styled.li`
-  margin-bottom: 5px;
-  background-color: var(--taskbar-button-active);
-  padding: 5px;
+  background-color: #2d2d3e;
+  color: #ffffff;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  animation: fadeIn 0.4s ease-in;
+
+  &:hover {
+    background-color: #3a3a52;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+const ClearButton = styled.button`
+  background-color: #ff5757;
+  color: white;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #ff1e1e;
+  }
 `;
 
 export default function ClipboardManager({ addNotification }) {
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState(() => {
+    const savedHistory = localStorage.getItem("clipboardHistory");
+    return savedHistory ? JSON.parse(savedHistory) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("clipboardHistory", JSON.stringify(history));
+  }, [history]);
 
   useEffect(() => {
     const handleCopy = (e) => {
@@ -48,15 +111,36 @@ export default function ClipboardManager({ addNotification }) {
     };
   }, [addNotification]);
 
+  const handleClearHistory = () => {
+    setHistory([]);
+    localStorage.removeItem("clipboardHistory");
+  };
+
+  const handleItemClick = (item) => {
+    navigator.clipboard.writeText(item);
+    if (addNotification) {
+      addNotification(`Copied back to clipboard: ${item}`);
+    }
+  };
+
   return (
     <ManagerContainer>
-      <h2>Clipboard Manager</h2>
-      <p>Copy text with Ctrl+C or right-click → Copy, then check below.</p>
+      <Title>📋Clipboard Manager</Title>
+      <Instructions>
+        Copy text with Ctrl+C then check below. Click an item to copy it back!
+      </Instructions>
       <ClipboardList>
         {history.map((item, idx) => (
-          <ClipboardItem key={idx}>{item}</ClipboardItem>
+          <ClipboardItem key={idx} onClick={() => handleItemClick(item)}>
+            {item}
+          </ClipboardItem>
         ))}
       </ClipboardList>
+      {history.length > 0 && (
+        <ClearButton onClick={handleClearHistory}>
+          Clear Clipboard History
+        </ClearButton>
+      )}
     </ManagerContainer>
   );
 }

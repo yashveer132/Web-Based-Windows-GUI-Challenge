@@ -74,7 +74,7 @@ const ActionButton = styled.button`
   color: white;
   border: none;
   cursor: pointer;
-   margin: 0 10px 30px;
+  margin: 0 10px 30px;
   border-radius: 5px;
   font-size: 1rem;
   transition: background-color 0.3s ease;
@@ -116,22 +116,28 @@ const TicTacToe = ({ addNotification }) => {
     setIsXNext(!isXNext);
     if (addNotification) {
       addNotification(
-        `Player ${isXNext ? "X" : "O"} played at cell ${index + 1}`
+        `Player ${isXNext ? "X" : "O"} placed their move on cell ${index + 1}.`
       );
     }
   };
 
   const status = winner
-    ? `Winner: ${winner}`
+    ? `Congratulations! Player ${
+        winner === "X" ? "1" : "2"
+      } (${winner}) is the winner.`
     : board.every((cell) => cell !== null)
-    ? "It's a draw!"
-    : `Next player: ${isXNext ? "X" : "O"}`;
+    ? "The game is a draw. Well played!"
+    : `It is now Player ${isXNext ? "1" : "2"}'s turn (${
+        isXNext ? "X" : "O"
+      }).`;
 
   const handleRestart = () => {
     setBoard(Array(9).fill(null));
     setIsXNext(true);
     if (addNotification) {
-      addNotification("New game started!");
+      addNotification(
+        "A new game has been initiated. Best of luck to both players!"
+      );
     }
   };
 
@@ -146,7 +152,7 @@ const TicTacToe = ({ addNotification }) => {
         ))}
       </Board>
       <ButtonBar>
-        <ActionButton onClick={handleRestart}>New Game</ActionButton>
+        <ActionButton onClick={handleRestart}>Start New Game</ActionButton>
       </ButtonBar>
     </GameContainer>
   );

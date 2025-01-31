@@ -1,20 +1,27 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const PromptContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: #000;
+  background-color: #1e1e1e;
   color: #0f0;
-  font-family: Consolas, monospace;
-  padding: 10px;
+  font-family: "Fira Code", monospace;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 255, 0, 0.5);
 `;
 
 const OutputArea = styled.div`
   flex: 1;
   overflow-y: auto;
   margin-bottom: 10px;
+  padding-right: 5px;
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #111;
 `;
 
 const InputArea = styled.div`
@@ -25,6 +32,8 @@ const InputArea = styled.div`
 
 const InputLabel = styled.span`
   margin-right: 5px;
+  color: #0fa;
+  font-weight: bold;
 `;
 
 const InputField = styled.input`
@@ -37,17 +46,62 @@ const InputField = styled.input`
   font-size: inherit;
 `;
 
+const SuggestionBox = styled.div`
+  background: #222;
+  color: #0f0;
+  padding: 5px 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  max-height: 100px;
+  overflow-y: auto;
+  margin-left: 20px;
+`;
+
+const CommandListContainer = styled.div`
+  background: #111;
+  color: #0fa;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+
+  ul {
+    margin-left: 20px;
+  }
+`;
+
+const commandsInfo = [
+  { command: "help", description: "Lists available commands" },
+  { command: "echo [message]", description: "Displays the message" },
+  { command: "notify [message]", description: "Sends a notification" },
+  { command: "clear", description: "Clears the screen" },
+  { command: "time", description: "Displays the current time" },
+  { command: "list", description: "Lists all commands and their descriptions" },
+];
+
 const CommandPrompt = ({ addNotification }) => {
   const [output, setOutput] = useState(["Welcome to the Command Prompt!"]);
   const [command, setCommand] = useState("");
+  const [commandHistory, setCommandHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [suggestions, setSuggestions] = useState([]);
+  const outputRef = useRef(null);
   const prompt = "C:\\>";
 
-  const handleSubmit = useCallback(() => {
+  useEffect(() => {
+    if (outputRef.current) {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+    }
+  }, [output]);
+
+  const handleCommandExecution = useCallback(() => {
     const trimmed = command.trim();
     const newOutput = [...output, `${prompt} ${trimmed}`];
 
     if (trimmed === "help") {
-      newOutput.push("Available commands: help, echo, notify, clear");
+      newOutput.push(
+        "Available commands: help, echo, notify, clear, time, list"
+      );
     } else if (trimmed.startsWith("echo ")) {
       newOutput.push(trimmed.replace("echo ", ""));
     } else if (trimmed.startsWith("notify ")) {
@@ -60,23 +114,64 @@ const CommandPrompt = ({ addNotification }) => {
       setOutput([]);
       setCommand("");
       return;
+    } else if (trimmed === "time") {
+      newOutput.push(`Current time: ${new Date().toLocaleTimeString()}`);
+    } else if (trimmed === "list") {
+      newOutput.push("Commands and their descriptions:");
+      commandsInfo.forEach(({ command, description }) => {
+        newOutput.push(`- ${command}: ${description}`);
+      });
     } else if (trimmed) {
       newOutput.push("Unknown command. Type 'help' for a list of commands.");
     }
 
+    setCommandHistory((prev) => [...prev, trimmed]);
+    setHistoryIndex(-1);
     setOutput(newOutput);
     setCommand("");
   }, [command, output, addNotification]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleSubmit();
+      handleCommandExecution();
+    } else if (e.key === "ArrowUp") {
+      if (historyIndex < commandHistory.length - 1) {
+        const newIndex = historyIndex + 1;
+        setHistoryIndex(newIndex);
+        setCommand(commandHistory[commandHistory.length - 1 - newIndex]);
+      }
+    } else if (e.key === "ArrowDown") {
+      if (historyIndex > 0) {
+        const newIndex = historyIndex - 1;
+        setHistoryIndex(newIndex);
+        setCommand(commandHistory[commandHistory.length - 1 - newIndex]);
+      } else {
+        setHistoryIndex(-1);
+        setCommand("");
+      }
     }
   };
 
+  useEffect(() => {
+    const filteredSuggestions = commandHistory.filter(
+      (cmd) => cmd.startsWith(command) && command !== ""
+    );
+    setSuggestions(filteredSuggestions);
+  }, [command, commandHistory]);
+
   return (
     <PromptContainer>
-      <OutputArea>
+      <CommandListContainer>
+        <strong>Available Commands:</strong>
+        <ul>
+          {commandsInfo.map(({ command, description }) => (
+            <li key={command}>
+              <strong>{command}</strong>: {description}
+            </li>
+          ))}
+        </ul>
+      </CommandListContainer>
+      <OutputArea ref={outputRef}>
         {output.map((line, index) => (
           <div key={index}>{line}</div>
         ))}
@@ -87,8 +182,16 @@ const CommandPrompt = ({ addNotification }) => {
           value={command}
           onChange={(e) => setCommand(e.target.value)}
           onKeyDown={handleKeyDown}
+          autoFocus
         />
       </InputArea>
+      {suggestions.length > 0 && (
+        <SuggestionBox>
+          {suggestions.map((suggestion, index) => (
+            <div key={index}>{suggestion}</div>
+          ))}
+        </SuggestionBox>
+      )}
     </PromptContainer>
   );
 };
