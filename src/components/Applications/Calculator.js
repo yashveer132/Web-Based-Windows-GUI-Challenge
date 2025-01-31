@@ -1,37 +1,58 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #121212;
+`;
+
 const CalculatorContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 5px;
-  padding: 10px;
-  background-color: var(--window-bg);
-  color: var(--text-color);
-  height: 100%;
-  box-sizing: border-box;
+  gap: 10px;
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: white;
+  width: 320px;
+  max-width: 90vw;
+  margin: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
 `;
 
 const Display = styled.div`
   grid-column: 1 / -1;
   background-color: #111;
-  padding: 10px;
+  padding: 15px;
   text-align: right;
-  font-size: 24px;
-  border: 1px solid var(--window-border);
-  margin-bottom: 10px;
+  font-size: 32px;
+  font-weight: bold;
   color: #0f0;
+  border: 2px solid #333;
   border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const DisplayOperator = styled.span`
+  color: #f0a500;
+  font-size: 24px;
+  padding-left: 10px;
 `;
 
 const Button = styled.button`
   padding: 15px;
-  font-size: 18px;
-  background-color: var(--button-bg);
-  border: 1px solid var(--button-border);
-  color: var(--text-color);
+  font-size: 20px;
+  background-color: #333;
+  border: 2px solid #555;
+  color: white;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #4a4a4a;
@@ -39,6 +60,25 @@ const Button = styled.button`
 
   &:active {
     opacity: 0.8;
+  }
+`;
+
+const OperatorButton = styled(Button)`
+  background-color: #f0a500;
+  color: black;
+
+  &:hover {
+    background-color: #d48900;
+  }
+`;
+
+const ClearButton = styled(Button)`
+  background-color: #ff4747;
+  color: white;
+  grid-column: 1 / -1;
+
+  &:hover {
+    background-color: #d43c3c;
   }
 `;
 
@@ -116,31 +156,31 @@ const Calculator = ({ addNotification }) => {
   );
 
   return (
-    <CalculatorContainer>
-      <Display>{display}</Display>
-      <Button onClick={() => inputDigit(7)}>7</Button>
-      <Button onClick={() => inputDigit(8)}>8</Button>
-      <Button onClick={() => inputDigit(9)}>9</Button>
-      <Button onClick={() => performOperation("/")}>/</Button>
-      <Button onClick={() => inputDigit(4)}>4</Button>
-      <Button onClick={() => inputDigit(5)}>5</Button>
-      <Button onClick={() => inputDigit(6)}>6</Button>
-      <Button onClick={() => performOperation("*")}>*</Button>
-      <Button onClick={() => inputDigit(1)}>1</Button>
-      <Button onClick={() => inputDigit(2)}>2</Button>
-      <Button onClick={() => inputDigit(3)}>3</Button>
-      <Button onClick={() => performOperation("-")}>-</Button>
-      <Button onClick={() => inputDigit(0)}>0</Button>
-      <Button onClick={inputDecimal}>.</Button>
-      <Button onClick={() => performOperation("=")}>=</Button>
-      <Button onClick={() => performOperation("+")}>+</Button>
-      <Button
-        onClick={clear}
-        style={{ gridColumn: "1 / -1", backgroundColor: "#ff4747" }}
-      >
-        Clear
-      </Button>
-    </CalculatorContainer>
+    <Wrapper>
+      <CalculatorContainer>
+        <Display>
+          {operator && <DisplayOperator>{operator}</DisplayOperator>}
+          {display}
+        </Display>
+        <Button onClick={() => inputDigit(7)}>7</Button>
+        <Button onClick={() => inputDigit(8)}>8</Button>
+        <Button onClick={() => inputDigit(9)}>9</Button>
+        <OperatorButton onClick={() => performOperation("/")}>/</OperatorButton>
+        <Button onClick={() => inputDigit(4)}>4</Button>
+        <Button onClick={() => inputDigit(5)}>5</Button>
+        <Button onClick={() => inputDigit(6)}>6</Button>
+        <OperatorButton onClick={() => performOperation("*")}>*</OperatorButton>
+        <Button onClick={() => inputDigit(1)}>1</Button>
+        <Button onClick={() => inputDigit(2)}>2</Button>
+        <Button onClick={() => inputDigit(3)}>3</Button>
+        <OperatorButton onClick={() => performOperation("-")}>-</OperatorButton>
+        <Button onClick={() => inputDigit(0)}>0</Button>
+        <Button onClick={inputDecimal}>.</Button>
+        <OperatorButton onClick={() => performOperation("=")}>=</OperatorButton>
+        <OperatorButton onClick={() => performOperation("+")}>+</OperatorButton>
+        <ClearButton onClick={clear}>Clear</ClearButton>
+      </CalculatorContainer>
+    </Wrapper>
   );
 };
 

@@ -1,30 +1,91 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
 
 const GameContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
-  background-color: var(--window-bg);
-  color: var(--text-color);
-  padding: 10px;
+  align-items: center;
+  height: 100vh;
+  background-color: #1e1e1e;
+  color: white;
+  padding: 20px;
+  font-family: "Arial, sans-serif";
+  justify-content: center;
 `;
 
 const Canvas = styled.canvas`
-  background-color: #222;
-  margin: 0 auto;
+  background-color: #333;
+  border: 2px solid #555;
+  margin-top: 20px;
   display: block;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 `;
 
 const Info = styled.div`
   text-align: center;
   margin-top: 10px;
+  font-size: 18px;
+`;
+
+const HighScore = styled.div`
+  margin-top: 10px;
+  font-size: 16px;
+  color: #f0a500;
+`;
+
+const Modal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #222;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+  animation: ${fadeIn} 0.5s ease;
+  text-align: center;
+  width: 300px;
+  max-width: 80%;
+`;
+
+const ModalTitle = styled.h2`
+  color: white;
+  margin-bottom: 15px;
+`;
+
+const ModalContent = styled.div`
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: white;
+`;
+
+const ModalButton = styled.button`
+  padding: 10px 20px;
+  background-color: #f0a500;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #d48900;
+  }
 `;
 
 const Snake = ({ addNotification }) => {
   const canvasRef = useRef(null);
   const [context, setContext] = useState(null);
   const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(() => parseInt(localStorage.getItem("highScore")) || 0);
+  const [showModal, setShowModal] = useState(false);
+  const [gameOverTriggered, setGameOverTriggered] = useState(false);
 
   const [snake, setSnake] = useState([
     { x: 10, y: 10 },
@@ -70,9 +131,9 @@ const Snake = ({ addNotification }) => {
   });
 
   function gameLoop() {
-    if (!context) return;
+    if (!context || gameOverTriggered) return;
 
-    context.fillStyle = "#222";
+    context.fillStyle = "#333";
     context.fillRect(0, 0, 400, 400);
 
     context.fillStyle = "red";
@@ -103,15 +164,7 @@ const Snake = ({ addNotification }) => {
       head.y >= 20 ||
       snake.some((seg) => seg.x === head.x && seg.y === head.y)
     ) {
-      if (addNotification) addNotification("Game Over. Final Score: " + score);
-      setSnake([
-        { x: 10, y: 10 },
-        { x: 9, y: 10 },
-        { x: 8, y: 10 },
-      ]);
-      setDirection("RIGHT");
-      setScore(0);
-      setFood({ x: 15, y: 10 });
+      handleGameOver();
       return;
     }
 
@@ -133,11 +186,48 @@ const Snake = ({ addNotification }) => {
     });
   }
 
+  function handleGameOver() {
+    if (gameOverTriggered) return;
+    setGameOverTriggered(true);
+
+    if (addNotification) addNotification("Game Over. Final Score: " + score);
+    if (score > highScore) {
+      setHighScore(score);
+      localStorage.setItem("highScore", score);
+    }
+    setShowModal(true);
+  }
+
+  function restartGame() {
+    setSnake([
+      { x: 10, y: 10 },
+      { x: 9, y: 10 },
+      { x: 8, y: 10 },
+    ]);
+    setDirection("RIGHT");
+    setScore(0);
+    setFood({ x: 15, y: 10 });
+    setShowModal(false);
+    setGameOverTriggered(false);
+  }
+
   return (
     <GameContainer>
       <Info>Score: {score}</Info>
+      <HighScore>High Score: {highScore}</HighScore>
       <Canvas ref={canvasRef} width="400" height="400" />
       <Info>Use Arrow Keys to move the snake</Info>
+
+      {showModal && (
+        <Modal>
+          <ModalTitle>Game Over</ModalTitle>
+          <ModalContent>
+            <p>Final Score: {score}</p>
+            <p>High Score: {highScore}</p>
+          </ModalContent>
+          <ModalButton onClick={restartGame}>Restart</ModalButton>
+        </Modal>
+      )}
     </GameContainer>
   );
 };
