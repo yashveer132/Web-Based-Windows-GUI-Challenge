@@ -4,10 +4,11 @@ import styled from "styled-components";
 const MenuContainer = styled.div`
   position: fixed;
   background-color: var(--window-bg);
-  border: outset 2px var(--window-border);
+  border: 1px solid var(--window-border);
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
   padding: 5px 0;
   z-index: 1000;
+  color: var(--text-color);
 `;
 
 const MenuItem = styled.div`

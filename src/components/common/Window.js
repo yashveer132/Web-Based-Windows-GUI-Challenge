@@ -9,13 +9,20 @@ import {
   faWindowRestore,
 } from "@fortawesome/free-solid-svg-icons";
 
-const WindowContainer = styled(Rnd)`
+const StyledRnd = styled(Rnd)`
   background-color: var(--window-bg);
-  border: outset 2px var(--window-border);
+  border: 1px solid var(--window-border);
   display: flex;
   flex-direction: column;
   box-shadow: ${(props) =>
-    props.isActive ? "0 0 10px rgba(0,0,0,0.3)" : "none"};
+    props.isActive ? "0 0 10px rgba(0,0,0,0.5)" : "none"};
+  overflow: hidden;
+
+  /* Responsive constraints */
+  @media (max-width: 600px) {
+    min-width: 200px !important;
+    min-height: 150px !important;
+  }
 `;
 
 const TitleBar = styled.div`
@@ -23,7 +30,7 @@ const TitleBar = styled.div`
     props.isActive
       ? "var(--window-title-active)"
       : "var(--window-title-inactive)"};
-  color: var(--text-color-light);
+  color: #fff;
   padding: 5px;
   display: flex;
   justify-content: space-between;
@@ -32,25 +39,34 @@ const TitleBar = styled.div`
 `;
 
 const Title = styled.span`
-  font-weight: bold;
+  font-weight: 600;
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
+  gap: 5px;
 `;
 
 const WindowButton = styled.button`
-  background: none;
+  background: transparent;
   border: none;
-  color: var(--text-color-light);
-  margin-left: 5px;
+  color: #fff;
+  padding: 0 6px;
   cursor: pointer;
-  font-size: 14px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &:active {
+    opacity: 0.7;
+  }
 `;
 
 const Content = styled.div`
   flex: 1;
   overflow: auto;
+  background-color: var(--window-bg);
 `;
 
 const Window = ({
@@ -62,56 +78,63 @@ const Window = ({
   onMinimize,
   onMaximize,
   onFocus,
-  zIndex,
+  isMaximized,
+  isMinimized,
   x,
   y,
   width,
   height,
 }) => {
-  const [isMaximized, setIsMaximized] = useState(false);
+  const [maximized, setMaximized] = useState(isMaximized);
 
   const handleMaximize = () => {
-    setIsMaximized(!isMaximized);
-    onMaximize();
+    setMaximized(!maximized);
+    onMaximize(id);
   };
 
+  if (isMinimized) {
+    return null;
+  }
+
   return (
-    <WindowContainer
+    <StyledRnd
       default={{
         x,
         y,
         width,
         height,
       }}
-      minWidth={200}
-      minHeight={150}
+      minWidth={300}
+      minHeight={200}
       bounds="parent"
       onMouseDown={onFocus}
       isActive={isActive}
-      style={{ zIndex }}
-      disableDragging={isMaximized}
-      enableResizing={!isMaximized}
-      size={isMaximized ? { width: "100%", height: "100%" } : undefined}
-      position={isMaximized ? { x: 0, y: 0 } : undefined}
+      enableResizing={!maximized}
+      disableDragging={maximized}
+      size={
+        maximized ? { width: "100%", height: "calc(100% - 40px)" } : undefined
+      }
+      position={maximized ? { x: 0, y: 0 } : undefined}
+      style={{ zIndex: isActive ? 999 : 998 }}
     >
       <TitleBar isActive={isActive}>
         <Title>{title}</Title>
         <ButtonGroup>
-          <WindowButton onClick={onMinimize}>
+          <WindowButton onClick={() => onMinimize(id)}>
             <FontAwesomeIcon icon={faWindowMinimize} />
           </WindowButton>
           <WindowButton onClick={handleMaximize}>
             <FontAwesomeIcon
-              icon={isMaximized ? faWindowRestore : faWindowMaximize}
+              icon={maximized ? faWindowRestore : faWindowMaximize}
             />
           </WindowButton>
-          <WindowButton onClick={onClose}>
+          <WindowButton onClick={() => onClose(id)}>
             <FontAwesomeIcon icon={faTimes} />
           </WindowButton>
         </ButtonGroup>
       </TitleBar>
       <Content>{children}</Content>
-    </WindowContainer>
+    </StyledRnd>
   );
 };
 

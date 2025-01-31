@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 
 const EditorContainer = styled.div`
@@ -9,21 +9,32 @@ const EditorContainer = styled.div`
 
 const Toolbar = styled.div`
   display: flex;
+  gap: 5px;
   padding: 5px;
-  background-color: var(--window-bg);
-  border-bottom: 1px solid var(--window-border);
+  background-color: var(--window-title-inactive);
 `;
 
 const Button = styled.button`
-  margin-right: 5px;
   padding: 5px 10px;
   background-color: var(--button-bg);
-  border: outset 2px var(--button-border);
+  border: 1px solid var(--button-border);
+  color: var(--text-color);
   cursor: pointer;
 
-  &:active {
-    border-style: inset;
+  &:hover {
+    background-color: #4a4a4a;
   }
+
+  &:active {
+    opacity: 0.8;
+  }
+`;
+
+const FileNameInput = styled.input`
+  padding: 5px;
+  background-color: #1e1e1e;
+  border: 1px solid var(--window-border);
+  color: var(--text-color);
 `;
 
 const TextArea = styled.textarea`
@@ -31,27 +42,38 @@ const TextArea = styled.textarea`
   resize: none;
   border: none;
   padding: 10px;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Segoe UI", sans-serif;
+  color: var(--text-color);
+  background-color: var(--window-bg);
 `;
 
-const TextEditor = ({ createFile, fileSystem }) => {
+const TextEditor = ({ createFile, addNotification }) => {
   const [text, setText] = useState("");
   const [fileName, setFileName] = useState("Untitled.txt");
 
   const handleSave = useCallback(() => {
     createFile("C:/Documents", fileName, text);
-    console.log("File saved:", fileName);
-  }, [createFile, fileName, text]);
+    if (addNotification) {
+      addNotification(`File saved: ${fileName}`);
+    }
+  }, [createFile, fileName, text, addNotification]);
 
   const handleFileNameChange = useCallback((e) => {
     setFileName(e.target.value);
   }, []);
 
+  const handlePrint = () => {
+    if (addNotification) {
+      addNotification(`Printing file: ${fileName} (simulation)`);
+    }
+  };
+
   return (
     <EditorContainer>
       <Toolbar>
         <Button onClick={handleSave}>Save</Button>
-        <input
+        <Button onClick={handlePrint}>Print</Button>
+        <FileNameInput
           type="text"
           value={fileName}
           onChange={handleFileNameChange}

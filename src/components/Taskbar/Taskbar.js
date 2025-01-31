@@ -18,21 +18,33 @@ const TaskbarContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 0 10px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 -1px 0 rgba(0, 0, 0, 0.5);
+
+  /* Responsive adjustment */
+  @media (max-width: 600px) {
+    height: 32px;
+  }
 `;
 
 const StartButton = styled.button`
   background-color: var(--taskbar-button-bg);
-  border: outset 2px var(--button-border);
-  padding: 2px 10px;
+  border: none;
+  padding: 8px 12px;
   font-weight: bold;
   display: flex;
   align-items: center;
   cursor: pointer;
+  color: var(--text-color);
+
+  &:hover {
+    background-color: var(--taskbar-button-active);
+  }
 
   &:active {
-    border-style: inset;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 600px) {
+    padding: 5px 8px;
   }
 `;
 
@@ -41,21 +53,21 @@ const TaskbarItems = styled.div`
   margin-left: 10px;
   flex: 1;
   overflow-x: auto;
+
   &::-webkit-scrollbar {
     display: none;
   }
 `;
 
 const TaskbarItem = styled.button`
-  background-color: ${(props) =>
-    props.isActive
-      ? "var(--taskbar-button-active)"
-      : "var(--taskbar-button-bg)"};
-  border: ${(props) =>
-    props.isActive
-      ? "inset 2px var(--button-border)"
-      : "outset 2px var(--button-border)"};
-  padding: 2px 10px;
+  background-color: ${(props) => {
+    if (props.isMinimized) return "#555";
+    return props.isActive
+      ? "var(--window-title-active)"
+      : "var(--taskbar-button-bg)";
+  }};
+  border: none;
+  padding: 5px 10px;
   margin-right: 5px;
   cursor: pointer;
   white-space: nowrap;
@@ -63,6 +75,16 @@ const TaskbarItem = styled.button`
   text-overflow: ellipsis;
   max-width: 150px;
   flex-shrink: 0;
+  color: #fff;
+
+  &:hover {
+    background-color: var(--taskbar-button-active);
+  }
+
+  @media (max-width: 600px) {
+    padding: 3px 6px;
+    max-width: 100px;
+  }
 `;
 
 const SystemTray = styled.div`
@@ -74,11 +96,27 @@ const SystemTray = styled.div`
 const TrayIcon = styled.div`
   margin-left: 10px;
   font-size: 14px;
+  cursor: pointer;
+  color: var(--text-color);
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  @media (max-width: 600px) {
+    margin-left: 5px;
+  }
 `;
 
 const Clock = styled.div`
   margin-left: 10px;
   font-size: 12px;
+  color: var(--text-color);
+
+  @media (max-width: 600px) {
+    margin-left: 5px;
+    font-size: 10px;
+  }
 `;
 
 const Taskbar = ({ onStartClick, windows, activeWindowId, onWindowClick }) => {
@@ -90,30 +128,35 @@ const Taskbar = ({ onStartClick, windows, activeWindowId, onWindowClick }) => {
   }, []);
 
   return (
-    <TaskbarContainer>
+    <TaskbarContainer className="taskbar-container">
       <StartButton onClick={onStartClick}>
         <FontAwesomeIcon icon={faWindows} style={{ marginRight: "5px" }} />
         Start
       </StartButton>
+
       <TaskbarItems>
         {windows.map((window) => (
           <TaskbarItem
             key={window.id}
             isActive={window.id === activeWindowId}
+            isMinimized={window.isMinimized}
             onClick={() => onWindowClick(window.id)}
           >
             {window.title}
           </TaskbarItem>
         ))}
       </TaskbarItems>
+
       <SystemTray>
-        <TrayIcon>
+        <TrayIcon title="Network Status">
           <FontAwesomeIcon icon={faWifi} />
         </TrayIcon>
-        <TrayIcon>
+
+        <TrayIcon title="Volume">
           <FontAwesomeIcon icon={faVolumeUp} />
         </TrayIcon>
-        <TrayIcon>
+
+        <TrayIcon title="Battery">
           <FontAwesomeIcon icon={faBatteryFull} />
         </TrayIcon>
         <Clock>{time.toLocaleTimeString()}</Clock>

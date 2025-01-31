@@ -1,6 +1,23 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyles = createGlobalStyle`
+  :root {
+    --desktop-bg: ${({ theme }) => theme.desktopBg};
+    --window-bg: ${({ theme }) => theme.windowBg};
+    --window-border: ${({ theme }) => theme.windowBorder};
+    --window-title-active: ${({ theme }) => theme.windowTitleActive};
+    --window-title-inactive: ${({ theme }) => theme.windowTitleInactive};
+    --text-color: ${({ theme }) => theme.textColor};
+    --button-bg: ${({ theme }) => theme.windowBorder}; 
+    --button-border: ${({ theme }) => theme.windowBorder};
+    --taskbar-bg: ${({ theme }) => theme.desktopBg};
+    --taskbar-button-bg: ${({ theme }) => theme.windowBg};
+    --taskbar-button-active: rgba(255,255,255,0.2);
+    --icon-bg: rgba(255, 255, 255, 0.2);
+    --notification-bg: ${({ theme }) => theme.windowBg};
+    --notification-text: ${({ theme }) => theme.textColor};
+  }
+
   * {
     box-sizing: border-box;
     margin: 0;
@@ -10,23 +27,14 @@ const GlobalStyles = createGlobalStyle`
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden;
+    background-color: var(--desktop-bg);
+    color: var(--text-color);
   }
 
-  :root {
-    --desktop-bg: #008080;
-    --window-bg: #c0c0c0;
-    --window-border: #ffffff;
-    --window-title-active: #000080;
-    --window-title-inactive: #808080;
-    --text-color: #000000;
-    --text-color-light: #ffffff;
-    --button-bg: #c0c0c0;
-    --button-text: #000000;
-    --button-border: #ffffff;
-    --taskbar-bg: #c0c0c0;
-    --taskbar-button-bg: #c0c0c0;
-    --taskbar-button-active: #ffffff;
-    --icon-bg: rgba(255, 255, 255, 0.1);
+  @media (max-width: 600px) {
+    body {
+      font-size: 14px;
+    }
   }
 `;
 

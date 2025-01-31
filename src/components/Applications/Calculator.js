@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 
 const CalculatorContainer = styled.div`
@@ -7,31 +7,42 @@ const CalculatorContainer = styled.div`
   gap: 5px;
   padding: 10px;
   background-color: var(--window-bg);
+  color: var(--text-color);
+  height: 100%;
+  box-sizing: border-box;
 `;
 
 const Display = styled.div`
   grid-column: 1 / -1;
-  background-color: #fff;
+  background-color: #111;
   padding: 10px;
   text-align: right;
   font-size: 24px;
+  border: 1px solid var(--window-border);
   margin-bottom: 10px;
-  border: inset 2px var(--window-border);
+  color: #0f0;
+  border-radius: 5px;
 `;
 
 const Button = styled.button`
-  padding: 10px;
+  padding: 15px;
   font-size: 18px;
   background-color: var(--button-bg);
-  border: outset 2px var(--button-border);
+  border: 1px solid var(--button-border);
+  color: var(--text-color);
   cursor: pointer;
+  border-radius: 3px;
+
+  &:hover {
+    background-color: #4a4a4a;
+  }
 
   &:active {
-    border-style: inset;
+    opacity: 0.8;
   }
 `;
 
-const Calculator = () => {
+const Calculator = ({ addNotification }) => {
   const [display, setDisplay] = useState("0");
   const [operator, setOperator] = useState(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
@@ -53,7 +64,7 @@ const Calculator = () => {
     if (waitingForOperand) {
       setDisplay("0.");
       setWaitingForOperand(false);
-    } else if (display.indexOf(".") === -1) {
+    } else if (!display.includes(".")) {
       setDisplay(display + ".");
     }
   }, [display, waitingForOperand]);
@@ -73,29 +84,35 @@ const Calculator = () => {
         setPreviousValue(inputValue);
       } else if (operator) {
         const currentValue = previousValue || 0;
-        const newValue = (() => {
-          switch (operator) {
-            case "+":
-              return currentValue + inputValue;
-            case "-":
-              return currentValue - inputValue;
-            case "*":
-              return currentValue * inputValue;
-            case "/":
-              return currentValue / inputValue;
-            default:
-              return inputValue;
-          }
-        })();
+        let newValue = currentValue;
 
+        switch (operator) {
+          case "+":
+            newValue = currentValue + inputValue;
+            break;
+          case "-":
+            newValue = currentValue - inputValue;
+            break;
+          case "*":
+            newValue = currentValue * inputValue;
+            break;
+          case "/":
+            newValue = currentValue / inputValue;
+            break;
+          default:
+            break;
+        }
         setPreviousValue(newValue);
         setDisplay(String(newValue));
+        if (addNotification && nextOperator === "=") {
+          addNotification(`Result: ${newValue}`);
+        }
       }
 
       setWaitingForOperand(true);
-      setOperator(nextOperator);
+      setOperator(nextOperator === "=" ? null : nextOperator);
     },
-    [display, operator, previousValue]
+    [display, operator, previousValue, addNotification]
   );
 
   return (
@@ -117,7 +134,10 @@ const Calculator = () => {
       <Button onClick={inputDecimal}>.</Button>
       <Button onClick={() => performOperation("=")}>=</Button>
       <Button onClick={() => performOperation("+")}>+</Button>
-      <Button onClick={clear} style={{ gridColumn: "1 / -1" }}>
+      <Button
+        onClick={clear}
+        style={{ gridColumn: "1 / -1", backgroundColor: "#ff4747" }}
+      >
         Clear
       </Button>
     </CalculatorContainer>

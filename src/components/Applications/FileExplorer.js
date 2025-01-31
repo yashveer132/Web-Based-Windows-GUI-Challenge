@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder, faFile, faArrowUp } from "@fortawesome/free-solid-svg-icons";
@@ -11,62 +11,93 @@ const ExplorerContainer = styled.div`
 
 const Toolbar = styled.div`
   display: flex;
+  gap: 5px;
   padding: 5px;
-  background-color: var(--window-bg);
-  border-bottom: 1px solid var(--window-border);
+  background-color: var(--window-title-inactive);
 `;
 
 const Button = styled.button`
-  margin-right: 5px;
   padding: 5px 10px;
   background-color: var(--button-bg);
-  border: outset 2px var(--button-border);
+  border: 1px solid var(--button-border);
+  color: var(--text-color);
   cursor: pointer;
 
-  &:active {
-    border-style: inset;
+  &:hover {
+    background-color: #4a4a4a;
   }
+  &:active {
+    opacity: 0.8;
+  }
+`;
+
+const Input = styled.input`
+  padding: 5px;
+  background-color: #1e1e1e;
+  border: 1px solid var(--window-border);
+  color: var(--text-color);
+  flex: 1;
 `;
 
 const FileList = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 10px;
+  background-color: var(--window-bg);
 `;
 
-const FileItem = styled.div`
+const FileItemRow = styled.div`
   display: flex;
   align-items: center;
+  gap: 10px;
   padding: 5px;
   cursor: pointer;
+  color: var(--text-color);
 
   &:hover {
     background-color: var(--taskbar-button-active);
   }
 `;
 
-const FileName = styled.span`
-  margin-left: 5px;
+const ButtonInline = styled.button`
+  margin-left: auto;
+  background-color: transparent;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+
+  &:hover {
+    color: #ff4f4f;
+  }
 `;
 
-const FileExplorer = ({ fileSystem, createFolder, deleteItem, renameItem }) => {
+export default function FileExplorer({
+  fileSystem,
+  createFile,
+  createFolder,
+  deleteItem,
+  renameItem,
+  addNotification,
+  loadFileSystemFromLocalStorage,
+  isEncrypted,
+}) {
   const [currentPath, setCurrentPath] = useState(["C:"]);
   const [newItemName, setNewItemName] = useState("");
 
-  const getCurrentFolder = useCallback(() => {
-    return currentPath.reduce(
-      (acc, folder) => acc[folder].children || acc[folder],
-      fileSystem
-    );
-  }, [currentPath, fileSystem]);
-
-  const handleItemClick = useCallback((item) => {
-    if (item.type === "folder") {
-      setCurrentPath((prev) => [...prev, item.name]);
-    } else {
-      console.log(`Opening file: ${item.name}`);
+  useEffect(() => {
+    if (loadFileSystemFromLocalStorage) {
+      loadFileSystemFromLocalStorage();
     }
-  }, []);
+  }, [loadFileSystemFromLocalStorage]);
+
+  const getCurrentFolder = useCallback(() => {
+    return currentPath.reduce((acc, folder) => {
+      if (acc && acc[folder]) {
+        return acc[folder].children || acc[folder];
+      }
+      return {};
+    }, fileSystem);
+  }, [currentPath, fileSystem]);
 
   const handleBackClick = useCallback(() => {
     if (currentPath.length > 1) {
@@ -77,27 +108,49 @@ const FileExplorer = ({ fileSystem, createFolder, deleteItem, renameItem }) => {
   const handleCreateFolder = useCallback(() => {
     if (newItemName) {
       createFolder(currentPath.join("/"), newItemName);
+      if (addNotification) {
+        addNotification(`Folder created: ${newItemName}`);
+      }
       setNewItemName("");
     }
-  }, [createFolder, currentPath, newItemName]);
+  }, [newItemName, createFolder, currentPath, addNotification]);
 
-  const handleDeleteItem = useCallback(
-    (itemName) => {
-      deleteItem([...currentPath, itemName].join("/"));
-    },
-    [deleteItem, currentPath]
-  );
-
-  const handleRenameItem = useCallback(
-    (oldName, newName) => {
-      if (newName) {
-        renameItem([...currentPath, oldName].join("/"), newName);
+  const handleItemClick = useCallback(
+    (name, item) => {
+      if (item.type === "folder") {
+        setCurrentPath((prev) => [...prev, name]);
+      } else {
+        if (addNotification) addNotification(`Opening file: ${name}`);
       }
     },
-    [renameItem, currentPath]
+    [addNotification]
+  );
+
+  const handleDelete = useCallback(
+    (name) => {
+      deleteItem([...currentPath, name].join("/"));
+      if (addNotification) {
+        addNotification(`Deleted: ${name}`);
+      }
+    },
+    [currentPath, deleteItem, addNotification]
+  );
+
+  const handleRename = useCallback(
+    (oldName) => {
+      const newName = prompt(`Rename ${oldName} to:`, oldName);
+      if (newName && newName.trim() !== "") {
+        renameItem([...currentPath, oldName].join("/"), newName);
+        if (addNotification) {
+          addNotification(`Renamed ${oldName} to ${newName}`);
+        }
+      }
+    },
+    [currentPath, renameItem, addNotification]
   );
 
   const currentFolder = getCurrentFolder();
+  const items = Object.entries(currentFolder);
 
   return (
     <ExplorerContainer>
@@ -105,38 +158,50 @@ const FileExplorer = ({ fileSystem, createFolder, deleteItem, renameItem }) => {
         <Button onClick={handleBackClick} disabled={currentPath.length === 1}>
           <FontAwesomeIcon icon={faArrowUp} /> Back
         </Button>
-        <input
+        <Input
           type="text"
           value={newItemName}
           onChange={(e) => setNewItemName(e.target.value)}
-          placeholder="New folder name"
+          placeholder="New folder name..."
         />
         <Button onClick={handleCreateFolder}>Create Folder</Button>
       </Toolbar>
+
+      {isEncrypted && (
+        <div
+          style={{ backgroundColor: "#333", color: "#ff8080", padding: "5px" }}
+        >
+          <strong>Encrypted FS:</strong> You must enter correct password each
+          open.
+        </div>
+      )}
+
       <FileList>
-        {Object.entries(currentFolder).map(([name, item]) => (
-          <FileItem
-            key={name}
-            onClick={() => handleItemClick({ ...item, name })}
-          >
+        {items.map(([name, item]) => (
+          <FileItemRow key={name} onClick={() => handleItemClick(name, item)}>
             <FontAwesomeIcon
               icon={item.type === "folder" ? faFolder : faFile}
             />
-            <FileName>{name}</FileName>
-            <Button onClick={() => handleDeleteItem(name)}>Delete</Button>
-            <Button
-              onClick={() => {
-                const newName = prompt(`Rename ${name} to:`, name);
-                handleRenameItem(name, newName);
+            <span>{name}</span>
+            <ButtonInline
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(name);
+              }}
+            >
+              Delete
+            </ButtonInline>
+            <ButtonInline
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRename(name);
               }}
             >
               Rename
-            </Button>
-          </FileItem>
+            </ButtonInline>
+          </FileItemRow>
         ))}
       </FileList>
     </ExplorerContainer>
   );
-};
-
-export default FileExplorer;
+}

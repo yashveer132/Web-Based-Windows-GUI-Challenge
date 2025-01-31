@@ -11,12 +11,12 @@ const IconWrapper = styled.div`
   width: 80px;
   height: 80px;
   cursor: pointer;
-  color: var(--text-color-light);
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  color: var(--text-color);
   background-color: ${({ isDragging }) =>
     isDragging ? "var(--icon-bg)" : "transparent"};
   border-radius: 5px;
   transition: background-color 0.2s;
+  user-select: none;
 
   &:hover {
     background-color: var(--icon-bg);

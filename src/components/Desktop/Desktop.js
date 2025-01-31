@@ -7,12 +7,17 @@ const DesktopContainer = styled.div`
   width: 100%;
   height: calc(100% - 40px);
   position: relative;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  grid-auto-rows: 100px;
-  gap: 10px;
+  overflow: auto;
   padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+
+  @media (max-width: 600px) {
+    height: calc(100% - 32px);
+  }
 `;
 
 const Desktop = ({ icons, moveIcon, openWindow }) => {
@@ -30,11 +35,12 @@ const Desktop = ({ icons, moveIcon, openWindow }) => {
   return (
     <DesktopContainer ref={drop}>
       {icons.map((icon) => (
-        <DesktopIcon
+        <div
           key={icon.id}
-          {...icon}
-          onDoubleClick={() => openWindow(icon.appId)}
-        />
+          style={{ position: "relative", left: icon.left, top: icon.top }}
+        >
+          <DesktopIcon {...icon} onDoubleClick={() => openWindow(icon.appId)} />
+        </div>
       ))}
     </DesktopContainer>
   );
