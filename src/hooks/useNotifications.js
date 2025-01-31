@@ -3,22 +3,23 @@ import { useState, useCallback } from "react";
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState([]);
 
-  const addNotification = useCallback((message) => {
-    const newNotification = {
-      id: Date.now(),
-      message,
-    };
+  const addNotification = useCallback((message, duration = 5000) => {
+    const id = Date.now();
+    const newNotification = { id, message, duration };
     setNotifications((prev) => [...prev, newNotification]);
 
-    setTimeout(() => {
-      setNotifications((prevState) =>
-        prevState.filter((n) => n.id !== newNotification.id)
-      );
-    }, 5000);
+    setTimeout(() => removeNotification(id), duration);
+  }, []);
+
+  const removeNotification = useCallback((id) => {
+    setNotifications((prev) =>
+      prev.filter((notification) => notification.id !== id)
+    );
   }, []);
 
   return {
     notifications,
     addNotification,
+    removeNotification,
   };
 };

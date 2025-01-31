@@ -150,6 +150,8 @@ const PowerOptions = styled.div`
   color: white;
   font-size: 1rem;
   cursor: pointer;
+  justify-content: center;
+  align-items: center;
 
   div {
     display: flex;

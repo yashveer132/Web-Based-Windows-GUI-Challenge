@@ -87,7 +87,8 @@ function InnerApp({ currentUser, onLogin, onLogout }) {
     disableEncryption,
   } = useFileSystem();
 
-  const { notifications, addNotification } = useNotifications();
+  const { notifications, addNotification, removeNotification } =
+    useNotifications();
 
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
   const [contextMenu, setContextMenu] = useState(null);
@@ -116,44 +117,85 @@ function InnerApp({ currentUser, onLogin, onLogout }) {
   const handleContextMenu = useCallback(
     (e) => {
       e.preventDefault();
+
       setContextMenu({
         x: e.clientX,
         y: e.clientY,
         items: [
-          { label: "View", onClick: () => addNotification("View clicked!") },
+          { label: "View" },
           {
-            label: "Sort By",
-            onClick: () => addNotification("Sort By clicked!"),
+            label: "Large Icons",
+            // onClick: () => changeIconSize("large"),
           },
+          {
+            label: "Small Icons",
+            // onClick: () => changeIconSize("small"),
+          },
+          {
+            label: "Grid Layout",
+            // onClick: () => arrangeIconsInGrid(),
+          },
+          { type: "separator" },
+          { label: "Sort By" },
+          {
+            label: "Name",
+            // onClick: () => sortIcons("name"),
+          },
+          {
+            label: "Size",
+            // onClick: () => sortIcons("size"),
+          },
+          {
+            label: "Type",
+            // onClick: () => sortIcons("type"),
+          },
+          {
+            label: "Date Modified",
+            // onClick: () => sortIcons("date"),
+          },
+          { type: "separator" },
+          {
+            label: "New",
+            subMenu: [
+              {
+                label: "Folder",
+                onClick: () => {
+                  const folderName = prompt("Enter folder name:", "New Folder");
+                  if (folderName) {
+                    addIcon(folderName, "folder");
+                    addNotification(`Folder '${folderName}' created.`);
+                  }
+                },
+              },
+              {
+                label: "Text Document",
+                onClick: () => {
+                  const fileName = prompt(
+                    "Enter file name:",
+                    "New Text Document.txt"
+                  );
+                  if (fileName) {
+                    createFile("/", fileName, "");
+                    addNotification(`Text document '${fileName}' created.`);
+                  }
+                },
+              },
+            ],
+          },
+          { type: "separator" },
           {
             label: "Refresh",
-            onClick: () => addNotification("Refresh clicked!"),
+            // onClick: handleRefresh,
           },
           { type: "separator" },
           {
-            label: "New Folder",
-            onClick: () => addIcon("New Folder", "folder"),
-          },
-          { type: "separator" },
-          {
-            label: isEncrypted ? "Disable Encryption" : "Enable Encryption",
-            onClick: () => {
-              if (isEncrypted) {
-                disableEncryption();
-                addNotification("File system encryption disabled.");
-              } else {
-                const pw = prompt("Enter an encryption password:");
-                if (pw) {
-                  enableEncryption(pw);
-                  addNotification("File system encryption enabled.");
-                }
-              }
-            },
+            label: "Personalize",
+            onClick: () => openWindow("Personalization"),
           },
         ],
       });
     },
-    [addIcon, addNotification, isEncrypted, disableEncryption, enableEncryption]
+    [addIcon, addNotification, createFile, openWindow]
   );
 
   const handleCloseContextMenu = useCallback(() => {
@@ -224,7 +266,10 @@ function InnerApp({ currentUser, onLogin, onLogout }) {
             onWindowClick={focusWindow}
           />
 
-          <NotificationCenter notifications={notifications} />
+          <NotificationCenter
+            notifications={notifications}
+            removeNotification={removeNotification}
+          />
 
           {contextMenu && (
             <ContextMenu {...contextMenu} onClose={handleCloseContextMenu} />

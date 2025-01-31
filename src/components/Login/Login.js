@@ -14,39 +14,61 @@ const LoginContainer = styled.div`
 
 const LoginBox = styled.div`
   background-color: var(--window-bg);
-  border: 1px solid var(--window-border);
-  padding: 30px;
-  width: 300px;
+  border: 2px solid var(--window-border);
+  padding: 40px 30px;
+  width: 400px;
+  border-radius: 12px;
   text-align: center;
   color: var(--text-color);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
 `;
 
 const Title = styled.h2`
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff;
+`;
+
+const Subtitle = styled.p`
+  font-size: 1rem;
+  color: #b0b0b0;
+  margin-bottom: 25px;
 `;
 
 const Input = styled.input`
   width: 90%;
-  padding: 8px;
-  margin-bottom: 10px;
-  background-color: #1e1e1e;
-  border: 1px solid var(--window-border);
+  padding: 12px;
+  margin-bottom: 20px;
+  background-color: #2e2e2e;
+  border: 2px solid var(--window-border);
   color: var(--text-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+
+  &:focus {
+    border-color: #0078d4;
+  }
 `;
 
 const Button = styled.button`
-  background-color: var(--button-bg);
-  border: 1px solid var(--button-border);
-  color: var(--text-color);
-  padding: 10px 20px;
+  background-color: #0078d4;
+  border: none;
+  color: #ffffff;
+  padding: 12px 30px;
   cursor: pointer;
+  font-size: 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: #4a4a4a;
+    background-color: #005fa3;
+    transform: translateY(-3px);
   }
 
   &:active {
-    opacity: 0.8;
+    transform: translateY(0);
   }
 `;
 
@@ -78,6 +100,7 @@ export default function Login({ onLogin }) {
     <LoginContainer>
       <LoginBox>
         <Title>Welcome, {selectedProfile}!</Title>
+        <Subtitle>Please enter your password to continue.</Subtitle>
         <Input
           type="password"
           placeholder="Enter a password (optional)"
