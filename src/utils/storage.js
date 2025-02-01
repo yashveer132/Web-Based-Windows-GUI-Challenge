@@ -27,6 +27,20 @@ export function addProfile(profileName) {
   }
 }
 
+export function removeProfile(profileName) {
+  const profiles = getAllProfiles();
+  const updatedProfiles = profiles.filter((profile) => profile !== profileName);
+  localStorage.setItem("webos_profiles", JSON.stringify(updatedProfiles));
+}
+
+export function editProfileName(oldName, newName) {
+  const profiles = getAllProfiles();
+  const updatedProfiles = profiles.map((profile) =>
+    profile === oldName ? newName : profile
+  );
+  localStorage.setItem("webos_profiles", JSON.stringify(updatedProfiles));
+}
+
 export function getThemeForUser(username) {
   return localStorage.getItem(`webos_theme_${username}`);
 }

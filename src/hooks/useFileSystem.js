@@ -31,13 +31,14 @@ export const useFileSystem = () => {
   const storageKey = "webos_fileSystem";
   const passwordKey = "webos_fsPassword";
   const encryptionFlagKey = "webos_fsEncrypted";
+  const lockedFlagKey = "webos_fsLocked";
 
   const [fileSystem, setFileSystem] = useState(initialFS);
   const [isEncrypted, setIsEncrypted] = useState(
     () => localStorage.getItem(encryptionFlagKey) === "true"
   );
   const [locked, setLocked] = useState(
-    () => localStorage.getItem(encryptionFlagKey) === "true"
+    () => localStorage.getItem(lockedFlagKey) === "true"
   );
 
   const loadFileSystemFromLocalStorage = useCallback(() => {
@@ -77,6 +78,21 @@ export const useFileSystem = () => {
   useEffect(() => {
     saveFileSystemToLocalStorage(fileSystem);
   }, [fileSystem, saveFileSystemToLocalStorage]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (isEncrypted) {
+        setLocked(true);
+        localStorage.setItem(lockedFlagKey, "true");
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isEncrypted]);
 
   const createFile = useCallback((path, name, content = "") => {
     setFileSystem((prev) => {
@@ -162,7 +178,6 @@ export const useFileSystem = () => {
       localStorage.setItem(passwordKey, pw);
       localStorage.setItem(encryptionFlagKey, "true");
       setIsEncrypted(true);
-      setLocked(true);
       saveFileSystemToLocalStorage(fileSystem);
     },
     [fileSystem, saveFileSystemToLocalStorage]
@@ -173,6 +188,7 @@ export const useFileSystem = () => {
     localStorage.setItem(encryptionFlagKey, "false");
     setIsEncrypted(false);
     setLocked(false);
+    localStorage.removeItem(lockedFlagKey);
     saveFileSystemToLocalStorage(fileSystem);
   }, [fileSystem, saveFileSystemToLocalStorage]);
 
@@ -187,6 +203,7 @@ export const useFileSystem = () => {
     if (decrypted) {
       setFileSystem(decrypted);
       setLocked(false);
+      localStorage.setItem(lockedFlagKey, "false");
       return true;
     } else {
       alert("Decrypt failed: wrong password or corrupted data.");

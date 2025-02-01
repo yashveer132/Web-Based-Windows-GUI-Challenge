@@ -14,8 +14,11 @@ const GameContainer = styled.div`
   padding: 20px;
   font-family: "Arial, sans-serif";
   justify-content: center;
+  margin-bottom: 10px;
+  margin-top: -60px;
   @media (max-width: 600px) {
     padding: 15px;
+    margin-top: -20px;
   }
 `;
 const Canvas = styled.canvas`

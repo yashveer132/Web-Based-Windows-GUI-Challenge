@@ -103,7 +103,7 @@ const Window = ({
 
   return (
     <StyledRnd
-      default={{ x: 150, y: 5, width: 1200, height: 580 }}
+      default={{ x: 40, y: 3, width: 1200, height: 580 }}
       minWidth={300}
       minHeight={200}
       bounds="window"

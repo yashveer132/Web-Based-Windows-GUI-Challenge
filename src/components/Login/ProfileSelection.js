@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { getAllProfiles, addProfile } from "../../utils/storage";
+import {
+  getAllProfiles,
+  addProfile,
+  removeProfile,
+  editProfileName,
+} from "../../utils/storage";
+import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
 
 const GlassBox = styled.div`
   background: rgba(20, 20, 60, 0.9);
@@ -34,7 +40,6 @@ const ProfileItem = styled.div`
   color: #ffffff;
   border-radius: 10px;
   font-size: 1.2rem;
-  cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,9 +52,60 @@ const ProfileItem = styled.div`
   }
 `;
 
-const Icon = styled.span`
-  font-size: 1.6rem;
-  color: #e3e3e3;
+const ProfileText = styled.span`
+  flex-grow: 1;
+  cursor: pointer;
+`;
+
+const ProfileInput = styled.input`
+  flex-grow: 1;
+  padding: 8px;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  background-color: rgba(46, 46, 70, 0.9);
+  color: #ffffff;
+  outline: none;
+  transition: 0.3s;
+  &:focus {
+    border-color: #0078d4;
+    box-shadow: 0px 0px 8px #0078d4;
+  }
+`;
+
+const IconContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const EditIcon = styled(FaEdit)`
+  color: #ffc107;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  &:hover {
+    color: #ffca2c;
+  }
+`;
+
+const SaveIcon = styled(FaSave)`
+  color: #4caf50;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  &:hover {
+    color: #66bb6a;
+  }
+`;
+
+const DeleteIcon = styled(FaTrash)`
+  color: #ff5c5c;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  &:hover {
+    color: #ff1c1c;
+  }
 `;
 
 const NewProfileSection = styled.div`
@@ -92,9 +148,21 @@ const AddButton = styled.button`
 const ProfileSelection = ({ onSelectProfile }) => {
   const [profiles, setProfiles] = useState(getAllProfiles());
   const [newProfile, setNewProfile] = useState("");
+  const [editingProfile, setEditingProfile] = useState(null);
+  const [editedName, setEditedName] = useState("");
+
+  useEffect(() => {
+    if (profiles.length === 0) {
+      addProfile("Guest1");
+      addProfile("Guest2");
+      setProfiles(getAllProfiles());
+    }
+  }, [profiles]);
+
   const handleSelect = (profileName) => {
     onSelectProfile(profileName);
   };
+
   const handleAddProfile = () => {
     if (newProfile.trim()) {
       addProfile(newProfile.trim());
@@ -103,14 +171,47 @@ const ProfileSelection = ({ onSelectProfile }) => {
     }
   };
 
+  const handleDeleteProfile = (profileName) => {
+    removeProfile(profileName);
+    setProfiles(getAllProfiles());
+  };
+
+  const handleEditClick = (profileName) => {
+    setEditingProfile(profileName);
+    setEditedName(profileName);
+  };
+
+  const handleSaveEdit = () => {
+    if (editedName.trim() && editingProfile) {
+      editProfileName(editingProfile, editedName.trim());
+      setProfiles(getAllProfiles());
+      setEditingProfile(null);
+    }
+  };
+
   return (
     <GlassBox>
       <Title>Select a Profile</Title>
       {profiles.length === 0 && <div>No profiles found.</div>}
       {profiles.map((prof) => (
-        <ProfileItem key={prof} onClick={() => handleSelect(prof)}>
-          {prof}
-          <Icon>👤</Icon>
+        <ProfileItem key={prof}>
+          {editingProfile === prof ? (
+            <ProfileInput
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+            />
+          ) : (
+            <ProfileText onClick={() => handleSelect(prof)}>{prof}</ProfileText>
+          )}
+
+          <IconContainer>
+            {editingProfile === prof ? (
+              <SaveIcon onClick={handleSaveEdit} />
+            ) : (
+              <EditIcon onClick={() => handleEditClick(prof)} />
+            )}
+            <DeleteIcon onClick={() => handleDeleteProfile(prof)} />
+          </IconContainer>
         </ProfileItem>
       ))}
       <NewProfileSection>

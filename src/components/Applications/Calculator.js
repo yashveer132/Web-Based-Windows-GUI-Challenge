@@ -21,6 +21,7 @@ const CalculatorContainer = styled.div`
   margin: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
+  margin-bottom: 150px;
   @media (max-width: 600px) {
     padding: 15px;
     gap: 8px;
