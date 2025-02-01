@@ -36,7 +36,7 @@ const MenuContainer = styled.div`
   border: 1px solid #333;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
   animation: ${slideUp} 0.3s ease-out forwards;
-  display: ${(props) => (props.isOpen ? "flex" : "none")};
+  display: ${(props) => (props.$isOpen ? "flex" : "none")};
   flex-direction: column;
   z-index: 1000;
   overflow: hidden;
@@ -110,23 +110,6 @@ const MenuItem = styled.div`
   }
 `;
 
-const RecentAppsSection = styled.div`
-  padding: 10px;
-  background-color: #333;
-  border-top: 1px solid #444;
-`;
-
-const RecentApp = styled.div`
-  padding: 5px;
-  cursor: pointer;
-  color: white;
-  transition: background-color 0.3s ease;
-  border-radius: 5px;
-  &:hover {
-    background-color: #4a4a5e;
-  }
-`;
-
 const UserSection = styled.div`
   padding: 10px;
   background-color: #29293d;
@@ -187,7 +170,6 @@ const PowerOptions = styled.div`
 
 const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [recentApps, setRecentApps] = useState([]);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -217,9 +199,6 @@ const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
   const handleItemClick = useCallback(
     (app) => {
       app.onClick();
-      setRecentApps((prev) =>
-        [app, ...prev.filter((a) => a.id !== app.id)].slice(0, 5)
-      );
       onClose();
     },
     [onClose]
@@ -231,7 +210,7 @@ const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
   };
 
   return (
-    <MenuContainer ref={menuRef} isOpen={isOpen}>
+    <MenuContainer ref={menuRef} $isOpen={isOpen}>
       <SearchBar>
         <FontAwesomeIcon icon={faSearch} color="white" />
         <SearchInput

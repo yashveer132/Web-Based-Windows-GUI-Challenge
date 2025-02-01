@@ -12,8 +12,8 @@ const IconWrapper = styled.div`
   height: 80px;
   cursor: pointer;
   color: var(--text-color);
-  background-color: ${({ isDragging }) =>
-    isDragging ? "var(--icon-bg)" : "transparent"};
+  background-color: ${({ $isDragging }) =>
+    $isDragging ? "var(--icon-bg)" : "transparent"};
   border-radius: 5px;
   transition: background-color 0.2s;
   user-select: none;
@@ -45,10 +45,11 @@ const DesktopIcon = ({ id, icon, label, left, top, onDoubleClick }) => {
       isDragging: monitor.isDragging(),
     }),
   });
+
   return (
     <IconWrapper
       ref={drag}
-      isDragging={isDragging}
+      $isDragging={isDragging}
       onDoubleClick={onDoubleClick}
     >
       <FontAwesomeIcon icon={icon} size="2x" />
