@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
+
 const EditorContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,6 +15,7 @@ const EditorContainer = styled.div`
     padding: 15px;
   }
 `;
+
 const Toolbar = styled.div`
   display: flex;
   gap: 10px;
@@ -27,6 +29,7 @@ const Toolbar = styled.div`
     gap: 5px;
   }
 `;
+
 const Button = styled.button`
   padding: 10px 15px;
   background-color: #4a90e2;
@@ -44,6 +47,7 @@ const Button = styled.button`
     font-size: 0.9rem;
   }
 `;
+
 const FileNameInput = styled.input`
   padding: 10px;
   border: 1px solid #555;
@@ -55,6 +59,7 @@ const FileNameInput = styled.input`
     font-size: 0.9rem;
   }
 `;
+
 const TextArea = styled.textarea`
   width: 600px;
   height: 300px;
@@ -72,6 +77,7 @@ const TextArea = styled.textarea`
     font-size: 0.9rem;
   }
 `;
+
 const Footer = styled.div`
   margin-top: 10px;
   font-size: 1rem;
@@ -80,6 +86,7 @@ const Footer = styled.div`
     font-size: 0.9rem;
   }
 `;
+
 const PrintPreviewOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -92,6 +99,7 @@ const PrintPreviewOverlay = styled.div`
   align-items: center;
   z-index: 10;
 `;
+
 const PrintPreviewContent = styled.div`
   background-color: #1c1c1c;
   color: white;
@@ -108,6 +116,7 @@ const PrintPreviewContent = styled.div`
     padding: 15px;
   }
 `;
+
 const PrintContent = styled.div`
   flex: 1;
   overflow-y: auto;
@@ -119,18 +128,21 @@ const PrintContent = styled.div`
     font-size: 0.9rem;
   }
 `;
+
 const PrintPreviewCloseButton = styled(Button)`
   background-color: #d9534f;
   &:hover {
     background-color: #c9302c;
   }
 `;
+
 const PrintButton = styled(Button)`
   background-color: #5cb85c;
   &:hover {
     background-color: #4cae4c;
   }
 `;
+
 const PrintSimulation = styled.div`
   background-color: #000;
   color: #fff;
@@ -143,23 +155,29 @@ const PrintSimulation = styled.div`
     font-size: 1.2rem;
   }
 `;
+
 const TextEditor = ({ createFile, addNotification }) => {
   const [text, setText] = useState("");
   const [fileName, setFileName] = useState("Untitled.txt");
   const [showPrintPreview, setShowPrintPreview] = useState(false);
   const [showPrintSimulation, setShowPrintSimulation] = useState(false);
+
   const handleSave = useCallback(() => {
     createFile("C:/Documents", fileName, text);
     if (addNotification) {
       addNotification(`File saved: ${fileName}`);
     }
+    setText("");
   }, [createFile, fileName, text, addNotification]);
+
   const handleFileNameChange = useCallback((e) => {
     setFileName(e.target.value);
   }, []);
+
   const handlePrintPreview = () => {
     setShowPrintPreview(true);
   };
+
   const handlePrint = () => {
     setShowPrintSimulation(true);
     if (addNotification) {
@@ -168,11 +186,13 @@ const TextEditor = ({ createFile, addNotification }) => {
     setTimeout(() => {
       setShowPrintSimulation(false);
       setShowPrintPreview(false);
+      setText("");
       if (addNotification) {
         addNotification(`Printing completed for: ${fileName}`);
       }
     }, 3000);
   };
+
   const handleDownloadFile = () => {
     const blob = new Blob([text], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -181,12 +201,16 @@ const TextEditor = ({ createFile, addNotification }) => {
     link.download = fileName;
     link.click();
     URL.revokeObjectURL(url);
+    setText("");
   };
+
   const wordCount = text
     .trim()
     .split(/\s+/)
     .filter((word) => word).length;
+
   const charCount = text.length;
+
   return (
     <EditorContainer>
       <Toolbar>
@@ -200,14 +224,17 @@ const TextEditor = ({ createFile, addNotification }) => {
           placeholder="File name"
         />
       </Toolbar>
+
       <TextArea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Type your text here..."
       />
+
       <Footer>
         Word Count: {wordCount} | Character Count: {charCount}
       </Footer>
+
       {showPrintPreview && (
         <PrintPreviewOverlay>
           <PrintPreviewContent>
@@ -230,6 +257,7 @@ const TextEditor = ({ createFile, addNotification }) => {
           </PrintPreviewContent>
         </PrintPreviewOverlay>
       )}
+
       {showPrintSimulation && (
         <PrintSimulation show={showPrintSimulation}>
           <p>🖨️ Printing in progress...</p>
@@ -238,4 +266,5 @@ const TextEditor = ({ createFile, addNotification }) => {
     </EditorContainer>
   );
 };
+
 export default TextEditor;
