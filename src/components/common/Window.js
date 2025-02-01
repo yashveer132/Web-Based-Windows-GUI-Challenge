@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Rnd } from "react-rnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -90,7 +90,10 @@ const Window = ({
   width,
   height,
 }) => {
-  const handleMaximize = () => {
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const handleMaximizeToggle = () => {
+    setIsFullScreen(!isFullScreen);
     onMaximize(id);
   };
 
@@ -100,16 +103,16 @@ const Window = ({
 
   return (
     <StyledRnd
-      default={{ x, y, width, height }}
+      default={{ x: 150, y: 5, width: 1200, height: 580 }}
       minWidth={300}
       minHeight={200}
       bounds="window"
       onMouseDown={onFocus}
       isActive={isActive}
-      enableResizing={!isMaximized}
-      disableDragging={isMaximized}
-      size={isMaximized ? { width: "100vw", height: "100vh" } : undefined}
-      position={isMaximized ? { x: 0, y: 0 } : undefined}
+      enableResizing={!isFullScreen}
+      disableDragging={isFullScreen}
+      size={isFullScreen ? { width: "100vw", height: "100vh" } : undefined}
+      position={isFullScreen ? { x: 0, y: 0 } : undefined}
       style={{ zIndex: isActive ? 999 : 998 }}
     >
       <TitleBar isActive={isActive}>
@@ -118,9 +121,9 @@ const Window = ({
           <WindowButton onClick={() => onMinimize(id)}>
             <FontAwesomeIcon icon={faWindowMinimize} />
           </WindowButton>
-          <WindowButton onClick={handleMaximize}>
+          <WindowButton onClick={handleMaximizeToggle}>
             <FontAwesomeIcon
-              icon={isMaximized ? faWindowRestore : faWindowMaximize}
+              icon={isFullScreen ? faWindowRestore : faWindowMaximize}
             />
           </WindowButton>
           <WindowButton onClick={() => onClose(id)}>

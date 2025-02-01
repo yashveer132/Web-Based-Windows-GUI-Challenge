@@ -114,47 +114,19 @@ function InnerApp({ currentUser, onLogin, onLogout }) {
         x: e.clientX,
         y: e.clientY,
         items: [
-          { label: "View" },
-          { label: "Large Icons" },
-          { label: "Small Icons" },
-          { label: "Grid Layout" },
-          { type: "separator" },
           { label: "Sort By" },
-          { label: "Name" },
-          { label: "Size" },
-          { label: "Type" },
-          { label: "Date Modified" },
+          { label: "Name", onClick: () => addNotification("Sorted by Name") },
+          { label: "Size", onClick: () => addNotification("Sorted by Size") },
+          { label: "Type", onClick: () => addNotification("Sorted by Type") },
+          { label: "Date Modified", onClick: () => addNotification("Sorted by Date") },
           { type: "separator" },
           {
-            label: "New",
-            subMenu: [
-              {
-                label: "Folder",
-                onClick: () => {
-                  const folderName = prompt("Enter folder name:", "New Folder");
-                  if (folderName) {
-                    addIcon(folderName, "folder");
-                    addNotification(`Folder '${folderName}' created.`);
-                  }
-                },
-              },
-              {
-                label: "Text Document",
-                onClick: () => {
-                  const fileName = prompt(
-                    "Enter file name:",
-                    "New Text Document.txt"
-                  );
-                  if (fileName) {
-                    createFile("/", fileName, "");
-                    addNotification(`Text document '${fileName}' created.`);
-                  }
-                },
-              },
-            ],
+            label: "Refresh",
+            onClick: () => {
+              loadIconsFromLocalStorage();
+              addNotification("Desktop refreshed.");
+            },
           },
-          { type: "separator" },
-          { label: "Refresh" },
           { type: "separator" },
           {
             label: "Personalize",
@@ -163,8 +135,10 @@ function InnerApp({ currentUser, onLogin, onLogout }) {
         ],
       });
     },
-    [addIcon, addNotification, createFile, openWindow]
+    [addNotification, loadIconsFromLocalStorage, openWindow]
   );
+  
+  
 
   const handleCloseContextMenu = useCallback(() => {
     setContextMenu(null);
@@ -235,6 +209,7 @@ function InnerApp({ currentUser, onLogin, onLogout }) {
             activeWindowId={activeWindowId}
             onWindowClick={focusWindow}
             closeWindow={closeWindow}
+            minimizeWindow={minimizeWindow}
           />
           <NotificationCenter
             notifications={notifications}

@@ -8,8 +8,8 @@ const IconWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   cursor: pointer;
   color: var(--text-color);
   background-color: ${({ $isDragging }) =>
@@ -17,23 +17,26 @@ const IconWrapper = styled.div`
   border-radius: 5px;
   transition: background-color 0.2s;
   user-select: none;
+
   &:hover {
     background-color: var(--icon-bg);
   }
+
   @media (max-width: 600px) {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
   }
 `;
 
 const IconLabel = styled.span`
-  margin-top: 5px;
-  font-size: 12px;
+  margin-top: 8px;
+  font-size: 14px;
   text-align: center;
   word-wrap: break-word;
   max-width: 100%;
+
   @media (max-width: 600px) {
-    font-size: 10px;
+    font-size: 12px;
   }
 `;
 
@@ -52,7 +55,7 @@ const DesktopIcon = ({ id, icon, label, left, top, onDoubleClick }) => {
       $isDragging={isDragging}
       onDoubleClick={onDoubleClick}
     >
-      <FontAwesomeIcon icon={icon} size="2x" />
+      <FontAwesomeIcon icon={icon} size="3x" />
       <IconLabel>{label}</IconLabel>
     </IconWrapper>
   );

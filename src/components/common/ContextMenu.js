@@ -3,32 +3,32 @@ import styled from "styled-components";
 
 const MenuContainer = styled.div`
   position: fixed;
-  background-color: var(--window-bg);
-  border: 1px solid var(--window-border);
+  background-color: #2c2c2c;
+  border: 1px solid #444;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
   padding: 5px 0;
   z-index: 1000;
-  color: var(--text-color);
-  min-width: 200px;
+  color: #ffffff;
+  min-width: 220px;
   border-radius: 5px;
   overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
   @media (max-width: 600px) {
     min-width: 150px;
-    font-size: 0.9rem;
   }
 `;
 
 const MenuItem = styled.div`
-  padding: 8px 20px;
+  padding: 12px 15px;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  text-align: center;
+  font-weight: bold;
   &:hover {
-    background-color: var(--taskbar-button-active);
+    background-color: #3d3d3d;
   }
   @media (max-width: 600px) {
-    padding: 6px 15px;
+    padding: 10px 12px;
   }
 `;
 
@@ -36,12 +36,13 @@ const SubMenuContainer = styled.div`
   position: absolute;
   top: 0;
   left: 100%;
-  background-color: var(--window-bg);
-  border: 1px solid var(--window-border);
+  background-color: #2c2c2c;
+  border: 1px solid #444;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
   padding: 5px 0;
-  min-width: 180px;
+  min-width: 200px;
   border-radius: 5px;
+  font-size: 0.9rem;
   @media (max-width: 600px) {
     min-width: 140px;
   }
@@ -49,24 +50,26 @@ const SubMenuContainer = styled.div`
 
 const Separator = styled.div`
   height: 1px;
-  background-color: var(--window-border);
+  background-color: #555;
   margin: 5px 0;
 `;
 
 const SubMenuArrow = styled.span`
   margin-left: auto;
   font-size: 12px;
-  color: var(--text-color);
+  color: #ccc;
 `;
 
 const ContextMenu = ({ x, y, items, onClose }) => {
   const [subMenuIndex, setSubMenuIndex] = useState(null);
+
   return (
     <MenuContainer
       style={{
-        left: x + 200 > window.innerWidth ? window.innerWidth - 210 : x,
+        left: x + 220 > window.innerWidth ? window.innerWidth - 230 : x,
         top: y + 300 > window.innerHeight ? window.innerHeight - 310 : y,
       }}
+      onClick={(e) => e.stopPropagation()} // Prevent closing on click inside
     >
       {items.map((item, index) => {
         if (item.type === "separator") {
@@ -79,7 +82,7 @@ const ContextMenu = ({ x, y, items, onClose }) => {
               onMouseLeave={() => setSubMenuIndex(null)}
               onClick={() => {
                 if (!item.subMenu) {
-                  item.onClick();
+                  item.onClick && item.onClick();
                   onClose();
                 }
               }}
@@ -93,7 +96,7 @@ const ContextMenu = ({ x, y, items, onClose }) => {
                   <MenuItem
                     key={subIndex}
                     onClick={() => {
-                      subItem.onClick();
+                      subItem.onClick && subItem.onClick();
                       onClose();
                     }}
                   >

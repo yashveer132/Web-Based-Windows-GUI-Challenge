@@ -140,27 +140,31 @@ const Taskbar = ({
   windows,
   activeWindowId,
   onWindowClick,
-  closeWindow,
+  minimizeWindow,
 }) => {
   const [time, setTime] = useState(new Date());
   const [isConnected, setIsConnected] = useState(true);
+
   useEffect(() => {
     const networkSimulation = setInterval(() => {
       setIsConnected((prevState) => !prevState);
     }, 5000);
     return () => clearInterval(networkSimulation);
   }, []);
+
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
   const toggleWindow = (windowId) => {
     if (activeWindowId === windowId) {
-      closeWindow(windowId);
+      minimizeWindow(windowId);
     } else {
       onWindowClick(windowId);
     }
   };
+
   return (
     <TaskbarContainer>
       <StartButton onClick={onStartClick}>
