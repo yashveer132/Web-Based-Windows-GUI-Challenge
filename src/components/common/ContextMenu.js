@@ -12,6 +12,10 @@ const MenuContainer = styled.div`
   min-width: 200px;
   border-radius: 5px;
   overflow: hidden;
+  @media (max-width: 600px) {
+    min-width: 150px;
+    font-size: 0.9rem;
+  }
 `;
 
 const MenuItem = styled.div`
@@ -20,9 +24,11 @@ const MenuItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   &:hover {
     background-color: var(--taskbar-button-active);
+  }
+  @media (max-width: 600px) {
+    padding: 6px 15px;
   }
 `;
 
@@ -36,6 +42,9 @@ const SubMenuContainer = styled.div`
   padding: 5px 0;
   min-width: 180px;
   border-radius: 5px;
+  @media (max-width: 600px) {
+    min-width: 140px;
+  }
 `;
 
 const Separator = styled.div`
@@ -52,7 +61,6 @@ const SubMenuArrow = styled.span`
 
 const ContextMenu = ({ x, y, items, onClose }) => {
   const [subMenuIndex, setSubMenuIndex] = useState(null);
-
   return (
     <MenuContainer
       style={{
@@ -64,7 +72,6 @@ const ContextMenu = ({ x, y, items, onClose }) => {
         if (item.type === "separator") {
           return <Separator key={index} />;
         }
-
         return (
           <div key={index} style={{ position: "relative" }}>
             <MenuItem
@@ -80,7 +87,6 @@ const ContextMenu = ({ x, y, items, onClose }) => {
               {item.label}
               {item.subMenu && <SubMenuArrow>▶</SubMenuArrow>}
             </MenuItem>
-
             {item.subMenu && subMenuIndex === index && (
               <SubMenuContainer>
                 {item.subMenu.map((subItem, subIndex) => (

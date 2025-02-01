@@ -14,9 +14,10 @@ const DesktopContainer = styled.div`
   align-content: flex-start;
   align-items: flex-start;
   gap: 10px;
-
   @media (max-width: 600px) {
     height: calc(100% - 32px);
+    gap: 5px;
+    padding: 5px;
   }
 `;
 
@@ -31,7 +32,6 @@ const Desktop = ({ icons, moveIcon, openWindow }) => {
       return undefined;
     },
   });
-
   return (
     <DesktopContainer ref={drop}>
       {icons.map((icon) => (

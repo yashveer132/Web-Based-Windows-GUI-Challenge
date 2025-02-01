@@ -21,6 +21,10 @@ const LoginBox = styled.div`
   text-align: center;
   color: var(--text-color);
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+  @media (max-width: 600px) {
+    width: 90%;
+    padding: 30px 20px;
+  }
 `;
 
 const Title = styled.h2`
@@ -28,12 +32,18 @@ const Title = styled.h2`
   font-size: 2rem;
   font-weight: bold;
   color: #ffffff;
+  @media (max-width: 600px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const Subtitle = styled.p`
   font-size: 1rem;
   color: #b0b0b0;
   margin-bottom: 25px;
+  @media (max-width: 600px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const Input = styled.input`
@@ -46,7 +56,6 @@ const Input = styled.input`
   border-radius: 8px;
   font-size: 1rem;
   outline: none;
-
   &:focus {
     border-color: #0078d4;
   }
@@ -61,12 +70,10 @@ const Button = styled.button`
   font-size: 1rem;
   border-radius: 8px;
   transition: all 0.3s ease;
-
   &:hover {
     background-color: #005fa3;
     transform: translateY(-3px);
   }
-
   &:active {
     transform: translateY(0);
   }
@@ -75,11 +82,9 @@ const Button = styled.button`
 export default function Login({ onLogin }) {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [password, setPassword] = useState("");
-
   const handleSelectProfile = (profileName) => {
     setSelectedProfile(profileName);
   };
-
   const handleLogin = () => {
     if (selectedProfile) {
       const userObj = { name: selectedProfile.trim() };
@@ -87,7 +92,6 @@ export default function Login({ onLogin }) {
       onLogin(userObj);
     }
   };
-
   if (!selectedProfile) {
     return (
       <LoginContainer>
@@ -95,7 +99,6 @@ export default function Login({ onLogin }) {
       </LoginContainer>
     );
   }
-
   return (
     <LoginContainer>
       <LoginBox>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
 const GameContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -11,28 +10,31 @@ const GameContainer = styled.div`
   background-color: #1e1e1e;
   font-family: "Arial, sans-serif";
   justify-content: center;
+  @media (max-width: 600px) {
+    padding: 15px;
+  }
 `;
-
 const Status = styled.div`
   text-align: center;
   margin-bottom: 20px;
   font-size: 1.5rem;
   color: #f0a500;
+  @media (max-width: 600px) {
+    font-size: 1.2rem;
+  }
 `;
-
 const Board = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
   gap: 8px;
   margin: auto;
-
   @media (max-width: 600px) {
     grid-template-columns: repeat(3, 70px);
     grid-template-rows: repeat(3, 70px);
+    gap: 5px;
   }
 `;
-
 const Cell = styled.button`
   width: 100px;
   height: 100px;
@@ -46,28 +48,26 @@ const Cell = styled.button`
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-
   &:hover {
     background-color: #4a4a4a;
   }
-
   &:active {
     opacity: 0.8;
   }
-
   @media (max-width: 600px) {
     width: 70px;
     height: 70px;
     font-size: 2rem;
   }
 `;
-
 const ButtonBar = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  @media (max-width: 600px) {
+    margin-top: 15px;
+  }
 `;
-
 const ActionButton = styled.button`
   padding: 12px 24px;
   background-color: #f0a500;
@@ -78,12 +78,15 @@ const ActionButton = styled.button`
   border-radius: 5px;
   font-size: 1rem;
   transition: background-color 0.3s ease;
-
   &:hover {
     background-color: #d48900;
   }
+  @media (max-width: 600px) {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    margin: 0 5px 20px;
+  }
 `;
-
 function calculateWinner(cells) {
   const lines = [
     [0, 1, 2],
@@ -102,12 +105,10 @@ function calculateWinner(cells) {
   }
   return null;
 }
-
 const TicTacToe = ({ addNotification }) => {
   const [board, setBoard] = useState(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
   const winner = calculateWinner(board);
-
   const handleClick = (index) => {
     if (board[index] || winner) return;
     const newBoard = board.slice();
@@ -120,7 +121,6 @@ const TicTacToe = ({ addNotification }) => {
       );
     }
   };
-
   const status = winner
     ? `Congratulations! Player ${
         winner === "X" ? "1" : "2"
@@ -130,7 +130,6 @@ const TicTacToe = ({ addNotification }) => {
     : `It is now Player ${isXNext ? "1" : "2"}'s turn (${
         isXNext ? "X" : "O"
       }).`;
-
   const handleRestart = () => {
     setBoard(Array(9).fill(null));
     setIsXNext(true);
@@ -140,7 +139,6 @@ const TicTacToe = ({ addNotification }) => {
       );
     }
   };
-
   return (
     <GameContainer>
       <Status>{status}</Status>
@@ -157,5 +155,4 @@ const TicTacToe = ({ addNotification }) => {
     </GameContainer>
   );
 };
-
 export default TicTacToe;

@@ -21,6 +21,10 @@ const CalculatorContainer = styled.div`
   margin: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
+  @media (max-width: 600px) {
+    padding: 15px;
+    gap: 8px;
+  }
 `;
 
 const Display = styled.div`
@@ -36,12 +40,19 @@ const Display = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media (max-width: 600px) {
+    padding: 10px;
+    font-size: 24px;
+  }
 `;
 
 const DisplayOperator = styled.span`
   color: #f0a500;
   font-size: 24px;
   padding-left: 10px;
+  @media (max-width: 600px) {
+    font-size: 18px;
+  }
 `;
 
 const Button = styled.button`
@@ -53,20 +64,21 @@ const Button = styled.button`
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s ease;
-
   &:hover {
     background-color: #4a4a4a;
   }
-
   &:active {
     opacity: 0.8;
+  }
+  @media (max-width: 600px) {
+    padding: 10px;
+    font-size: 16px;
   }
 `;
 
 const OperatorButton = styled(Button)`
   background-color: #f0a500;
   color: black;
-
   &:hover {
     background-color: #d48900;
   }
@@ -76,7 +88,6 @@ const ClearButton = styled(Button)`
   background-color: #ff4747;
   color: white;
   grid-column: 1 / -1;
-
   &:hover {
     background-color: #d43c3c;
   }
@@ -119,13 +130,11 @@ const Calculator = ({ addNotification }) => {
   const performOperation = useCallback(
     (nextOperator) => {
       const inputValue = Number.parseFloat(display);
-
       if (previousValue == null) {
         setPreviousValue(inputValue);
       } else if (operator) {
         const currentValue = previousValue || 0;
         let newValue = currentValue;
-
         switch (operator) {
           case "+":
             newValue = currentValue + inputValue;
@@ -148,7 +157,6 @@ const Calculator = ({ addNotification }) => {
           addNotification(`Result: ${newValue}`);
         }
       }
-
       setWaitingForOperand(true);
       setOperator(nextOperator === "=" ? null : nextOperator);
     },

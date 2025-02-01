@@ -11,17 +11,26 @@ const ManagerContainer = styled.div`
   height: 100vh;
   padding: 20px;
   font-family: "Arial, sans-serif";
+  @media (max-width: 600px) {
+    padding: 15px;
+  }
 `;
 
 const Title = styled.h2`
   font-size: 2rem;
   margin-bottom: 10px;
+  @media (max-width: 600px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const Instructions = styled.p`
   font-size: 1rem;
   margin-bottom: 20px;
   color: #aaaaaa;
+  @media (max-width: 600px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const ClipboardList = styled.ul`
@@ -32,6 +41,9 @@ const ClipboardList = styled.ul`
   margin-top: 10px;
   list-style-type: none;
   padding: 0;
+  @media (max-width: 600px) {
+    max-width: 90vw;
+  }
 `;
 
 const ClipboardItem = styled.li`
@@ -44,11 +56,9 @@ const ClipboardItem = styled.li`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s ease;
   animation: fadeIn 0.4s ease-in;
-
   &:hover {
     background-color: #3a3a52;
   }
-
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -72,9 +82,12 @@ const ClearButton = styled.button`
   margin-top: 10px;
   margin-bottom: 40px;
   transition: background-color 0.3s ease;
-
   &:hover {
     background-color: #ff1e1e;
+  }
+  @media (max-width: 600px) {
+    padding: 8px 12px;
+    font-size: 0.9rem;
   }
 `;
 
@@ -104,7 +117,6 @@ export default function ClipboardManager({ addNotification }) {
         }
       }
     };
-
     document.addEventListener("copy", handleCopy);
     return () => {
       document.removeEventListener("copy", handleCopy);

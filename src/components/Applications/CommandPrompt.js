@@ -5,12 +5,15 @@ const PromptContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: #1e1e1e;
+  background-color: #1e1e2f;
   color: #0f0;
   font-family: "Fira Code", monospace;
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 255, 0, 0.5);
+  @media (max-width: 600px) {
+    padding: 10px;
+  }
 `;
 
 const OutputArea = styled.div`
@@ -22,6 +25,9 @@ const OutputArea = styled.div`
   padding: 10px;
   border-radius: 5px;
   background-color: #111;
+  @media (max-width: 600px) {
+    padding: 8px;
+  }
 `;
 
 const InputArea = styled.div`
@@ -34,6 +40,9 @@ const InputLabel = styled.span`
   margin-right: 5px;
   color: #0fa;
   font-weight: bold;
+  @media (max-width: 600px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const InputField = styled.input`
@@ -44,6 +53,9 @@ const InputField = styled.input`
   outline: none;
   font-family: inherit;
   font-size: inherit;
+  @media (max-width: 600px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const SuggestionBox = styled.div`
@@ -55,6 +67,11 @@ const SuggestionBox = styled.div`
   max-height: 100px;
   overflow-y: auto;
   margin-left: 20px;
+  @media (max-width: 600px) {
+    margin-left: 10px;
+    padding: 4px 8px;
+    font-size: 0.9rem;
+  }
 `;
 
 const CommandListContainer = styled.div`
@@ -64,9 +81,15 @@ const CommandListContainer = styled.div`
   margin-bottom: 10px;
   border-radius: 5px;
   font-size: 14px;
-
   ul {
     margin-left: 20px;
+  }
+  @media (max-width: 600px) {
+    padding: 8px;
+    font-size: 12px;
+    ul {
+      margin-left: 10px;
+    }
   }
 `;
 
@@ -87,17 +110,14 @@ const CommandPrompt = ({ addNotification }) => {
   const [suggestions, setSuggestions] = useState([]);
   const outputRef = useRef(null);
   const prompt = "C:\\>";
-
   useEffect(() => {
     if (outputRef.current) {
       outputRef.current.scrollTop = outputRef.current.scrollHeight;
     }
   }, [output]);
-
   const handleCommandExecution = useCallback(() => {
     const trimmed = command.trim();
     const newOutput = [...output, `${prompt} ${trimmed}`];
-
     if (trimmed === "help") {
       newOutput.push(
         "Available commands: help, echo, notify, clear, time, list"
@@ -124,13 +144,11 @@ const CommandPrompt = ({ addNotification }) => {
     } else if (trimmed) {
       newOutput.push("Unknown command. Type 'help' for a list of commands.");
     }
-
     setCommandHistory((prev) => [...prev, trimmed]);
     setHistoryIndex(-1);
     setOutput(newOutput);
     setCommand("");
   }, [command, output, addNotification]);
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleCommandExecution();
@@ -151,14 +169,12 @@ const CommandPrompt = ({ addNotification }) => {
       }
     }
   };
-
   useEffect(() => {
     const filteredSuggestions = commandHistory.filter(
       (cmd) => cmd.startsWith(command) && command !== ""
     );
     setSuggestions(filteredSuggestions);
   }, [command, commandHistory]);
-
   return (
     <PromptContainer>
       <CommandListContainer>

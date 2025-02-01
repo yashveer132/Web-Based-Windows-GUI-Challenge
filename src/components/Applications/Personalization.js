@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useThemeContext } from "../../contexts/ThemeContext";
 import { getThemeForUser, setThemeForUser } from "../../utils/storage";
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -24,28 +23,38 @@ const Container = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  @media (max-width: 600px) {
+    padding: 15px;
+    max-width: 90vw;
+    min-width: 260px;
+  }
 `;
-
 const Heading = styled.h2`
   margin-bottom: 15px;
   font-size: 1.8rem;
   text-align: center;
+  @media (max-width: 600px) {
+    font-size: 1.5rem;
+  }
 `;
-
 const CurrentThemeDisplay = styled.p`
   margin-bottom: 10px;
   font-size: 1.2rem;
   color: var(--text-color);
+  @media (max-width: 600px) {
+    font-size: 1rem;
+  }
 `;
-
 const ThemeOptions = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 15px;
   margin-bottom: 20px;
   width: 100%;
+  @media (max-width: 600px) {
+    gap: 10px;
+  }
 `;
-
 const ThemeButton = styled.button`
   padding: 15px;
   border: none;
@@ -59,26 +68,26 @@ const ThemeButton = styled.button`
   text-transform: capitalize;
   text-align: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-3px);
   }
+  @media (max-width: 600px) {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
 `;
-
 const CustomThemeContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 100%;
 `;
-
 const ColorInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
 `;
-
 const ColorInput = styled.input`
   width: 100%;
   padding: 5px;
@@ -87,7 +96,6 @@ const ColorInput = styled.input`
   color: var(--text-color);
   border-radius: 4px;
 `;
-
 const CustomThemeButton = styled.button`
   padding: 10px;
   font-size: 1rem;
@@ -98,14 +106,15 @@ const CustomThemeButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
-
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
   }
+  @media (max-width: 600px) {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
 `;
-
-const themeList = ["Dark", "Light", "Classic", "Pastel", "Pink", "Custom"];
-
+const themeList = ["Dark", "Light", "Classic", "Pastel", "Pink"];
 const Personalization = ({ currentUser, addNotification }) => {
   const { themeName, changeTheme, applyCustomTheme } = useThemeContext();
   const [customTheme, setCustomTheme] = useState({
@@ -115,7 +124,6 @@ const Personalization = ({ currentUser, addNotification }) => {
     windowBorder: "#cccccc",
   });
   const [showCustomOptions, setShowCustomOptions] = useState(false);
-
   useEffect(() => {
     if (currentUser) {
       const userTheme = getThemeForUser(currentUser.name);
@@ -124,7 +132,6 @@ const Personalization = ({ currentUser, addNotification }) => {
       }
     }
   }, [currentUser, changeTheme]);
-
   const handleSelectTheme = (newTheme) => {
     if (newTheme.toLowerCase() === themeName) {
       if (addNotification) {
@@ -132,14 +139,12 @@ const Personalization = ({ currentUser, addNotification }) => {
       }
       return;
     }
-
     if (newTheme === "Custom") {
       setShowCustomOptions(true);
     } else {
       setShowCustomOptions(false);
       changeTheme(newTheme.toLowerCase());
     }
-
     if (currentUser) {
       setThemeForUser(currentUser.name, newTheme.toLowerCase());
     }
@@ -147,21 +152,18 @@ const Personalization = ({ currentUser, addNotification }) => {
       addNotification(`Theme changed to: ${newTheme}`);
     }
   };
-
   const handleCustomInputChange = (e) => {
     setCustomTheme({
       ...customTheme,
       [e.target.name]: e.target.value,
     });
   };
-
   const handleApplyCustomTheme = () => {
     applyCustomTheme(customTheme);
     if (addNotification) {
       addNotification(`Custom theme applied successfully!`);
     }
   };
-
   return (
     <Container>
       <CurrentThemeDisplay>
@@ -174,57 +176,7 @@ const Personalization = ({ currentUser, addNotification }) => {
           </ThemeButton>
         ))}
       </ThemeOptions>
-
-      {showCustomOptions && (
-        <CustomThemeContainer>
-          <h3 style={{ textAlign: "center" }}>Create Your Custom Theme</h3>
-          <ColorInputContainer>
-            <label>
-              Desktop Background:
-              <ColorInput
-                type="color"
-                name="desktopBg"
-                value={customTheme.desktopBg}
-                onChange={handleCustomInputChange}
-              />
-            </label>
-            <label>
-              Text Color:
-              <ColorInput
-                type="color"
-                name="textColor"
-                value={customTheme.textColor}
-                onChange={handleCustomInputChange}
-              />
-            </label>
-            <label>
-              Button Background:
-              <ColorInput
-                type="color"
-                name="buttonBg"
-                value={customTheme.buttonBg}
-                onChange={handleCustomInputChange}
-              />
-            </label>
-            <label>
-              Window Border:
-              <ColorInput
-                type="color"
-                name="windowBorder"
-                value={customTheme.windowBorder}
-                onChange={handleCustomInputChange}
-              />
-            </label>
-          </ColorInputContainer>
-          <CustomThemeButton>Apply Custom Theme</CustomThemeButton>
-        </CustomThemeContainer>
-      )}
-
-      <p style={{ textAlign: "center" }}>
-        Select a theme to instantly change the appearance of your environment.
-      </p>
     </Container>
   );
 };
-
 export default Personalization;

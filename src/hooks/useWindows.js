@@ -47,23 +47,36 @@ export const useWindows = () => {
 
   const openWindow = useCallback((appId) => {
     setWindows((prev) => {
-      const existing = prev.find((w) => w.appId === appId && !w.isMinimized);
-      if (existing) {
-        setActiveWindowId(existing.id);
-        return prev;
+      const existingIndex = prev.findIndex((w) => w.appId === appId);
+      if (existingIndex !== -1) {
+        const existingWindow = prev[existingIndex];
+        const updatedWindow = {
+          ...existingWindow,
+          isMinimized: false,
+          isMaximized: true,
+          x: 0,
+          y: 0,
+        };
+        const newWindows = [...prev];
+        newWindows[existingIndex] = updatedWindow;
+        setActiveWindowId(existingWindow.id);
+        return newWindows;
+      } else {
+        const newWindow = {
+          id: Date.now(),
+          appId,
+          title: appId,
+          x: 0,
+          y: 0,
+          width: 600,
+          height: 400,
+          isMinimized: false,
+          isMaximized: true,
+          prevState: null,
+        };
+        setActiveWindowId(newWindow.id);
+        return [...prev, newWindow];
       }
-      const newWindow = {
-        id: Date.now(),
-        appId,
-        title: appId,
-        x: 50,
-        y: 50,
-        width: 600,
-        height: 400,
-        isMinimized: false,
-        isMaximized: false,
-      };
-      return [...prev, newWindow];
     });
   }, []);
 
@@ -88,11 +101,36 @@ export const useWindows = () => {
 
   const maximizeWindow = useCallback((id) => {
     setWindows((prev) =>
-      prev.map((window) =>
-        window.id === id
-          ? { ...window, isMaximized: !window.isMaximized }
-          : window
-      )
+      prev.map((window) => {
+        if (window.id === id) {
+          if (!window.isMaximized) {
+            return {
+              ...window,
+              prevState: {
+                x: window.x,
+                y: window.y,
+                width: window.width,
+                height: window.height,
+              },
+              isMaximized: true,
+              x: 0,
+              y: 0,
+            };
+          } else {
+            const { prevState } = window;
+            return {
+              ...window,
+              isMaximized: false,
+              x: prevState ? prevState.x : window.x,
+              y: prevState ? prevState.y : window.y,
+              width: prevState ? prevState.width : window.width,
+              height: prevState ? prevState.height : window.height,
+              prevState: null,
+            };
+          }
+        }
+        return window;
+      })
     );
   }, []);
 

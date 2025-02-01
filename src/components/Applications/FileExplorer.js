@@ -3,42 +3,57 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFolder,
-  faFile,
-  faArrowUp,
   faFileImage,
   faFileAlt,
+  faArrowUp,
+  faLock,
+  faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
 
 const ExplorerContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background-color: #1e1e2f;
-  color: white;
-  padding: 10px;
-  font-family: "Arial, sans-serif";
+  height: 90vh;
+  width: 90vw;
+  background-color: #282c34;
+  color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+
+  @media (max-width: 768px) {
+    width: 100vw;
+    height: 100vh;
+    padding: 10px;
+    border-radius: 0;
+  }
 `;
 
 const Toolbar = styled.div`
   display: flex;
   gap: 10px;
   padding: 10px;
-  background-color: #2a2a40;
+  background-color: #3b3f58;
   border-radius: 8px;
+  flex-wrap: wrap;
 `;
 
 const Button = styled.button`
   padding: 10px 15px;
-  background-color: #4a90e2;
+  background-color: #61dafb;
   border: none;
   border-radius: 5px;
-  color: white;
+  color: #282c34;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   &:hover {
-    background-color: #357ab7;
+    background-color: #52b7e0;
   }
   &:disabled {
     background-color: #555;
@@ -51,20 +66,21 @@ const Input = styled.input`
   flex: 1;
   border: 1px solid #444;
   background-color: #333;
-  color: white;
+  color: #fff;
   border-radius: 5px;
 `;
 
 const BreadcrumbContainer = styled.div`
-  margin-bottom: 10px;
+  margin: 10px 0;
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
 `;
 
 const Breadcrumb = styled.span`
-  color: #4a90e2;
+  color: #61dafb;
   cursor: pointer;
+
   &:hover {
     text-decoration: underline;
   }
@@ -74,7 +90,7 @@ const FileList = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 10px;
-  background-color: #29293d;
+  background-color: #1f232e;
   border-radius: 8px;
 `;
 
@@ -87,8 +103,9 @@ const FileItemRow = styled.div`
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+
   &:hover {
-    background-color: #3a3a52;
+    background-color: #32374d;
   }
 `;
 
@@ -106,7 +123,7 @@ const Actions = styled.div`
 const ActionButton = styled.button`
   padding: 5px 10px;
   background-color: #ff4f4f;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -116,6 +133,7 @@ const ActionButton = styled.button`
     background-color: #d9534f;
   }
 `;
+
 const ActionButtonRename = styled(ActionButton)`
   background-color: #4caf50;
 
@@ -138,13 +156,16 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background-color: #1e1e2f;
+  background-color: #282c34;
   padding: 20px;
   border-radius: 8px;
-  width: 500px;
-  color: white;
-  overflow: auto;
-  max-height: 80vh;
+  width: 90%;
+  max-width: 400px;
+  color: #fff;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 `;
 
 const ImagePreview = styled.img`
@@ -160,11 +181,16 @@ export default function FileExplorer({
   renameItem,
   addNotification,
   loadFileSystemFromLocalStorage,
+  isEncrypted,
+  locked,
+  unlockFileSystem,
+  enableEncryption,
+  disableEncryption,
 }) {
   const [currentPath, setCurrentPath] = useState(["C:"]);
   const [newItemName, setNewItemName] = useState("");
-  const [isCreatingFile, setIsCreatingFile] = useState(false);
   const [modalContent, setModalContent] = useState(null);
+  const [passwordInput, setPasswordInput] = useState("");
 
   useEffect(() => {
     if (loadFileSystemFromLocalStorage) {
@@ -215,7 +241,7 @@ export default function FileExplorer({
   const handleItemClick = useCallback((name, item) => {
     if (item.type === "folder") {
       setCurrentPath((prev) => [...prev, name]);
-    } else if (item.type === "text") {
+    } else if (item.type === "file" || item.type === "text") {
       setModalContent({ type: "text", content: item.content, title: name });
     } else if (item.type === "image") {
       setModalContent({ type: "image", content: item.content, title: name });
@@ -246,6 +272,51 @@ export default function FileExplorer({
   const currentFolder = getCurrentFolder();
   const items = Object.entries(currentFolder);
 
+  const handleToggleEncryption = () => {
+    if (isEncrypted) {
+      if (
+        window.confirm(
+          "Disable encryption? Your data will be stored unencrypted."
+        )
+      ) {
+        disableEncryption();
+        addNotification("Encryption disabled.");
+      }
+    } else {
+      const password = prompt("Enter a password to enable encryption:");
+      if (password && password.trim() !== "") {
+        enableEncryption(password);
+        addNotification("Encryption enabled.");
+      }
+    }
+  };
+
+  if (locked) {
+    return (
+      <ModalOverlay>
+        <ModalContent>
+          <h3>Enter Encryption Password</h3>
+          <Input
+            type="password"
+            value={passwordInput}
+            onChange={(e) => setPasswordInput(e.target.value)}
+            placeholder="Password"
+          />
+          <Button
+            onClick={() => {
+              const success = unlockFileSystem(passwordInput);
+              if (success) {
+                setPasswordInput("");
+              }
+            }}
+          >
+            Unlock
+          </Button>
+        </ModalContent>
+      </ModalOverlay>
+    );
+  }
+
   return (
     <ExplorerContainer>
       <Toolbar>
@@ -260,8 +331,18 @@ export default function FileExplorer({
         />
         <Button onClick={handleCreateFolder}>Create Folder</Button>
         <Button onClick={handleCreateFile}>Create File</Button>
+        <Button onClick={handleToggleEncryption}>
+          {isEncrypted ? (
+            <>
+              <FontAwesomeIcon icon={faUnlock} /> Disable Encryption
+            </>
+          ) : (
+            <>
+              <FontAwesomeIcon icon={faLock} /> Enable Encryption
+            </>
+          )}
+        </Button>
       </Toolbar>
-
       <BreadcrumbContainer>
         {currentPath.map((folder, index) => (
           <Breadcrumb key={index} onClick={() => handleBreadcrumbClick(index)}>
@@ -270,7 +351,6 @@ export default function FileExplorer({
           </Breadcrumb>
         ))}
       </BreadcrumbContainer>
-
       <FileList>
         {items.map(([name, item]) => (
           <FileItemRow key={name} onClick={() => handleItemClick(name, item)}>
@@ -305,7 +385,6 @@ export default function FileExplorer({
           </FileItemRow>
         ))}
       </FileList>
-
       {modalContent && (
         <ModalOverlay onClick={closeModal}>
           <ModalContent onClick={(e) => e.stopPropagation()}>

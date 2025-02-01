@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Rnd } from "react-rnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,8 +17,6 @@ const StyledRnd = styled(Rnd)`
   box-shadow: ${(props) =>
     props.isActive ? "0 0 10px rgba(0,0,0,0.5)" : "none"};
   overflow: hidden;
-
-  /* Responsive constraints */
   @media (max-width: 600px) {
     min-width: 200px !important;
     min-height: 150px !important;
@@ -36,10 +34,16 @@ const TitleBar = styled.div`
   justify-content: space-between;
   align-items: center;
   cursor: move;
+  @media (max-width: 600px) {
+    padding: 3px;
+  }
 `;
 
 const Title = styled.span`
   font-weight: 600;
+  @media (max-width: 600px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const ButtonGroup = styled.div`
@@ -53,13 +57,14 @@ const WindowButton = styled.button`
   color: #fff;
   padding: 0 6px;
   cursor: pointer;
-
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
   }
-
   &:active {
     opacity: 0.7;
+  }
+  @media (max-width: 600px) {
+    padding: 0 4px;
   }
 `;
 
@@ -85,10 +90,7 @@ const Window = ({
   width,
   height,
 }) => {
-  const [maximized, setMaximized] = useState(isMaximized);
-
   const handleMaximize = () => {
-    setMaximized(!maximized);
     onMaximize(id);
   };
 
@@ -98,21 +100,16 @@ const Window = ({
 
   return (
     <StyledRnd
-      default={{
-        x,
-        y,
-        width,
-        height,
-      }}
+      default={{ x, y, width, height }}
       minWidth={300}
       minHeight={200}
       bounds="window"
       onMouseDown={onFocus}
       isActive={isActive}
-      enableResizing={!maximized}
-      disableDragging={maximized}
-      size={maximized ? { width: "100vw", height: "100vh" } : undefined}
-      position={maximized ? { x: 0, y: 0 } : undefined}
+      enableResizing={!isMaximized}
+      disableDragging={isMaximized}
+      size={isMaximized ? { width: "100vw", height: "100vh" } : undefined}
+      position={isMaximized ? { x: 0, y: 0 } : undefined}
       style={{ zIndex: isActive ? 999 : 998 }}
     >
       <TitleBar isActive={isActive}>
@@ -123,7 +120,7 @@ const Window = ({
           </WindowButton>
           <WindowButton onClick={handleMaximize}>
             <FontAwesomeIcon
-              icon={maximized ? faWindowRestore : faWindowMaximize}
+              icon={isMaximized ? faWindowRestore : faWindowMaximize}
             />
           </WindowButton>
           <WindowButton onClick={() => onClose(id)}>

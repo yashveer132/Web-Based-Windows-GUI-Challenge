@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import html2canvas from "html2canvas";
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -13,26 +12,43 @@ const Container = styled.div`
   font-family: "Arial, sans-serif";
   padding: 20px;
   gap: 20px;
+  @media (max-width: 600px) {
+    padding: 15px;
+    gap: 15px;
+  }
 `;
-
 const Instructions = styled.div`
   text-align: center;
   line-height: 1.8;
+  h2 {
+    font-size: 1.8rem;
+    @media (max-width: 600px) {
+      font-size: 1.5rem;
+    }
+  }
+  p {
+    font-size: 1rem;
+    @media (max-width: 600px) {
+      font-size: 0.9rem;
+    }
+  }
 `;
-
 const CropOverlay = styled.div`
   position: fixed;
   border: 2px dashed #ff4f4f;
   pointer-events: none;
   background-color: rgba(255, 0, 0, 0.1);
 `;
-
 const ButtonContainer = styled.div`
   display: flex;
   gap: 15px;
   margin-bottom: 20px;
+  @media (max-width: 600px) {
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 `;
-
 const CaptureButton = styled.button`
   padding: 12px 20px;
   background-color: #4a90e2;
@@ -42,28 +58,26 @@ const CaptureButton = styled.button`
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-
   &:hover {
     background-color: #357ab7;
   }
+  @media (max-width: 600px) {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
 `;
-
 const ResetButton = styled(CaptureButton)`
   background-color: #d9534f;
-
   &:hover {
     background-color: #c9302c;
   }
 `;
-
 const DownloadButton = styled(CaptureButton)`
   background-color: #5cb85c;
-
   &:hover {
     background-color: #4cae4c;
   }
 `;
-
 const Preview = styled.div`
   width: 80%;
   max-width: 800px;
@@ -74,7 +88,6 @@ const Preview = styled.div`
   border-radius: 8px;
   padding: 15px;
   line-height: 1.6;
-
   img {
     width: 100%;
     height: auto;
@@ -82,8 +95,11 @@ const Preview = styled.div`
     object-fit: contain;
     border-radius: 5px;
   }
+  @media (max-width: 600px) {
+    width: 90%;
+    padding: 10px;
+  }
 `;
-
 export default function ScreenCaptureTool({
   addNotification,
   fileSystem,
@@ -94,14 +110,12 @@ export default function ScreenCaptureTool({
   const [cropRect, setCropRect] = useState(null);
   const overlayRef = useRef(null);
   const [previewImg, setPreviewImg] = useState(null);
-
   useEffect(() => {
     const handleMouseDown = (e) => {
       if (!isCropping) return;
       setStartPos({ x: e.clientX, y: e.clientY });
       setCropRect({ x: e.clientX, y: e.clientY, w: 0, h: 0 });
     };
-
     const handleMouseMove = (e) => {
       if (!isCropping || !startPos) return;
       const rectX = Math.min(startPos.x, e.clientX);
@@ -110,7 +124,6 @@ export default function ScreenCaptureTool({
       const rectH = Math.abs(e.clientY - startPos.y);
       setCropRect({ x: rectX, y: rectY, w: rectW, h: rectH });
     };
-
     const handleMouseUp = () => {
       if (isCropping) {
         setIsCropping(false);
@@ -118,18 +131,15 @@ export default function ScreenCaptureTool({
           addNotification("Cropping completed. Click 'Capture' to save.");
       }
     };
-
     document.addEventListener("mousedown", handleMouseDown);
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
-
     return () => {
       document.removeEventListener("mousedown", handleMouseDown);
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isCropping, startPos, addNotification]);
-
   useEffect(() => {
     if (!overlayRef.current) return;
     if (cropRect) {
@@ -142,7 +152,6 @@ export default function ScreenCaptureTool({
       overlayRef.current.style.display = "none";
     }
   }, [cropRect]);
-
   const startCrop = () => {
     setIsCropping(true);
     setStartPos(null);
@@ -150,7 +159,6 @@ export default function ScreenCaptureTool({
     if (addNotification)
       addNotification("Draw a rectangle on the screen for capture.");
   };
-
   const capture = async () => {
     if (!cropRect || cropRect.w === 0 || cropRect.h === 0) {
       if (addNotification) addNotification("No selection to capture!");
@@ -165,16 +173,13 @@ export default function ScreenCaptureTool({
         cropRect.w,
         cropRect.h
       );
-
       const newCanvas = document.createElement("canvas");
       newCanvas.width = cropRect.w;
       newCanvas.height = cropRect.h;
       const newCtx = newCanvas.getContext("2d");
       newCtx.putImageData(imageData, 0, 0);
-
       const dataUrl = newCanvas.toDataURL("image/png");
       setPreviewImg(dataUrl);
-
       if (createFile) {
         const fileName = "Capture_" + Date.now() + ".png";
         createFile("C:/Pictures", fileName, dataUrl);
@@ -189,7 +194,6 @@ export default function ScreenCaptureTool({
       }
     }
   };
-
   const downloadCapture = () => {
     if (!previewImg) return;
     const link = document.createElement("a");
@@ -197,7 +201,6 @@ export default function ScreenCaptureTool({
     link.download = "screencapture.png";
     link.click();
   };
-
   return (
     <Container>
       <Instructions>
@@ -206,7 +209,6 @@ export default function ScreenCaptureTool({
         <p>2) Once selected, click "Capture" to take a screenshot.</p>
         <p>3) Download or view the capture in the preview section below.</p>
       </Instructions>
-
       <ButtonContainer>
         <CaptureButton onClick={startCrop}>Start Cropping</CaptureButton>
         <CaptureButton onClick={capture}>Capture</CaptureButton>
@@ -217,7 +219,6 @@ export default function ScreenCaptureTool({
           </DownloadButton>
         )}
       </ButtonContainer>
-
       <Preview>
         {previewImg ? (
           <img src={previewImg} alt="Screen capture preview" />
@@ -225,7 +226,6 @@ export default function ScreenCaptureTool({
           <p>No captures yet.</p>
         )}
       </Preview>
-
       <CropOverlay ref={overlayRef} style={{ display: "none" }} />
     </Container>
   );

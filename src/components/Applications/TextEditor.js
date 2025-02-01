@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-
 const EditorContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -11,8 +10,10 @@ const EditorContainer = styled.div`
   background-color: #1e1e1e;
   color: #ffffff;
   font-family: "Segoe UI", sans-serif;
+  @media (max-width: 600px) {
+    padding: 15px;
+  }
 `;
-
 const Toolbar = styled.div`
   display: flex;
   gap: 10px;
@@ -20,8 +21,12 @@ const Toolbar = styled.div`
   background-color: #333333;
   border-radius: 8px;
   margin-bottom: 10px;
+  flex-wrap: wrap;
+  @media (max-width: 600px) {
+    padding: 8px;
+    gap: 5px;
+  }
 `;
-
 const Button = styled.button`
   padding: 10px 15px;
   background-color: #4a90e2;
@@ -31,20 +36,25 @@ const Button = styled.button`
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.3s ease;
-
   &:hover {
     background-color: #357ab7;
   }
+  @media (max-width: 600px) {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
 `;
-
 const FileNameInput = styled.input`
   padding: 10px;
   border: 1px solid #555;
   background-color: #2a2a2a;
   color: #ffffff;
   border-radius: 5px;
+  @media (max-width: 600px) {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
 `;
-
 const TextArea = styled.textarea`
   width: 600px;
   height: 300px;
@@ -55,14 +65,21 @@ const TextArea = styled.textarea`
   color: #ffffff;
   font-size: 1rem;
   resize: none;
+  @media (max-width: 600px) {
+    width: 90%;
+    height: 200px;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
 `;
-
 const Footer = styled.div`
   margin-top: 10px;
   font-size: 1rem;
   color: #cccccc;
+  @media (max-width: 600px) {
+    font-size: 0.9rem;
+  }
 `;
-
 const PrintPreviewOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -75,7 +92,6 @@ const PrintPreviewOverlay = styled.div`
   align-items: center;
   z-index: 10;
 `;
-
 const PrintPreviewContent = styled.div`
   background-color: #1c1c1c;
   color: white;
@@ -86,32 +102,35 @@ const PrintPreviewContent = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  @media (max-width: 600px) {
+    width: 90%;
+    height: 300px;
+    padding: 15px;
+  }
 `;
-
 const PrintContent = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 10px 0;
   white-space: pre-wrap;
   text-align: left;
+  @media (max-width: 600px) {
+    padding: 8px 0;
+    font-size: 0.9rem;
+  }
 `;
-
 const PrintPreviewCloseButton = styled(Button)`
   background-color: #d9534f;
-
   &:hover {
     background-color: #c9302c;
   }
 `;
-
 const PrintButton = styled(Button)`
   background-color: #5cb85c;
-
   &:hover {
     background-color: #4cae4c;
   }
 `;
-
 const PrintSimulation = styled.div`
   background-color: #000;
   color: #fff;
@@ -119,29 +138,28 @@ const PrintSimulation = styled.div`
   border-radius: 8px;
   font-size: 1.5rem;
   display: ${(props) => (props.show ? "block" : "none")};
+  @media (max-width: 600px) {
+    padding: 15px;
+    font-size: 1.2rem;
+  }
 `;
-
 const TextEditor = ({ createFile, addNotification }) => {
   const [text, setText] = useState("");
   const [fileName, setFileName] = useState("Untitled.txt");
   const [showPrintPreview, setShowPrintPreview] = useState(false);
   const [showPrintSimulation, setShowPrintSimulation] = useState(false);
-
   const handleSave = useCallback(() => {
     createFile("C:/Documents", fileName, text);
     if (addNotification) {
       addNotification(`File saved: ${fileName}`);
     }
   }, [createFile, fileName, text, addNotification]);
-
   const handleFileNameChange = useCallback((e) => {
     setFileName(e.target.value);
   }, []);
-
   const handlePrintPreview = () => {
     setShowPrintPreview(true);
   };
-
   const handlePrint = () => {
     setShowPrintSimulation(true);
     if (addNotification) {
@@ -155,7 +173,6 @@ const TextEditor = ({ createFile, addNotification }) => {
       }
     }, 3000);
   };
-
   const handleDownloadFile = () => {
     const blob = new Blob([text], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -165,13 +182,11 @@ const TextEditor = ({ createFile, addNotification }) => {
     link.click();
     URL.revokeObjectURL(url);
   };
-
   const wordCount = text
     .trim()
     .split(/\s+/)
     .filter((word) => word).length;
   const charCount = text.length;
-
   return (
     <EditorContainer>
       <Toolbar>
@@ -185,17 +200,14 @@ const TextEditor = ({ createFile, addNotification }) => {
           placeholder="File name"
         />
       </Toolbar>
-
       <TextArea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Type your text here..."
       />
-
       <Footer>
         Word Count: {wordCount} | Character Count: {charCount}
       </Footer>
-
       {showPrintPreview && (
         <PrintPreviewOverlay>
           <PrintPreviewContent>
@@ -218,7 +230,6 @@ const TextEditor = ({ createFile, addNotification }) => {
           </PrintPreviewContent>
         </PrintPreviewOverlay>
       )}
-
       {showPrintSimulation && (
         <PrintSimulation show={showPrintSimulation}>
           <p>🖨️ Printing in progress...</p>
@@ -227,5 +238,4 @@ const TextEditor = ({ createFile, addNotification }) => {
     </EditorContainer>
   );
 };
-
 export default TextEditor;

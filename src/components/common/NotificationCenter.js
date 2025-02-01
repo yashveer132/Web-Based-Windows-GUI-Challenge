@@ -35,7 +35,6 @@ const NotificationContainer = styled.div`
   gap: 10px;
   z-index: 9999;
   width: 300px;
-
   @media (max-width: 600px) {
     width: 90%;
   }
@@ -52,8 +51,11 @@ const NotificationBubble = styled.div`
   align-items: center;
   animation: ${slideDown} 0.5s ease forwards,
     ${slideUp} 0.5s ease forwards ${(props) => props.duration || 3}s;
-  transition: background-color 0.3s ease; /* Smooth hover effect */
+  transition: background-color 0.3s ease;
   opacity: 1;
+  @media (max-width: 600px) {
+    padding: 10px 15px;
+  }
 `;
 
 const CloseButton = styled.button`
@@ -66,6 +68,9 @@ const CloseButton = styled.button`
   display: flex;
   align-items: center;
   transition: opacity 0.2s ease;
+  @media (max-width: 600px) {
+    font-size: 1rem;
+  }
 `;
 
 const NotificationCenter = ({ notifications, removeNotification }) => {
@@ -78,7 +83,6 @@ const NotificationCenter = ({ notifications, removeNotification }) => {
     );
     return () => timers.forEach(clearTimeout);
   }, [notifications, removeNotification]);
-
   return (
     <NotificationContainer>
       {notifications.map((notification) => (

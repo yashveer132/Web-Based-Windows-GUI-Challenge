@@ -40,7 +40,6 @@ const MenuContainer = styled.div`
   flex-direction: column;
   z-index: 1000;
   overflow: hidden;
-
   @media (max-width: 600px) {
     width: 260px;
   }
@@ -62,7 +61,6 @@ const SearchInput = styled.input`
   color: white;
   border-radius: 5px;
   font-size: 0.9rem;
-
   &:focus {
     outline: none;
     border: 1px solid #4a90e2;
@@ -76,6 +74,9 @@ const MenuItems = styled.div`
   gap: 10px;
   max-height: 300px;
   overflow-y: auto;
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  }
 `;
 
 const MenuItem = styled.div`
@@ -92,14 +93,20 @@ const MenuItem = styled.div`
   text-align: center;
   transition: background-color 0.3s ease;
   height: 90px;
-
   &:hover {
     background-color: #4a4a5e;
   }
-
   .emoji {
     font-size: 1.8rem;
     margin-bottom: 5px;
+  }
+  @media (max-width: 600px) {
+    height: 70px;
+    padding: 10px;
+    font-size: 0.75rem;
+    .emoji {
+      font-size: 1.5rem;
+    }
   }
 `;
 
@@ -115,7 +122,6 @@ const RecentApp = styled.div`
   color: white;
   transition: background-color 0.3s ease;
   border-radius: 5px;
-
   &:hover {
     background-color: #4a4a5e;
   }
@@ -129,6 +135,20 @@ const UserSection = styled.div`
   justify-content: space-between;
   align-items: center;
   border-top: 1px solid #444;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+  }
+`;
+
+const PowerSection = styled.div`
+  padding: 10px;
+  background-color: #29293d;
+  border-top: 1px solid #444;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const LogoutButton = styled.div`
@@ -138,7 +158,6 @@ const LogoutButton = styled.div`
   align-items: center;
   gap: 5px;
   font-size: 1rem;
-
   &:hover {
     color: #ff4f4f;
   }
@@ -152,15 +171,17 @@ const PowerOptions = styled.div`
   cursor: pointer;
   justify-content: center;
   align-items: center;
-
   div {
     display: flex;
     align-items: center;
     gap: 5px;
-
     &:hover {
       color: #ff4f4f;
     }
+  }
+  @media (max-width: 600px) {
+    gap: 10px;
+    font-size: 0.9rem;
   }
 `;
 
@@ -220,7 +241,6 @@ const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
           onChange={handleSearchChange}
         />
       </SearchBar>
-
       <MenuItems>
         {filteredApps.map((app) => (
           <MenuItem key={app.id} onClick={() => handleItemClick(app)}>
@@ -229,15 +249,13 @@ const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
           </MenuItem>
         ))}
       </MenuItems>
-
       <UserSection>
         <div>{currentUser?.name}</div>
         <LogoutButton onClick={onLogout}>
           <FontAwesomeIcon icon={faSignOutAlt} /> Log Out
         </LogoutButton>
       </UserSection>
-
-      <UserSection>
+      <PowerSection>
         <PowerOptions>
           <div onClick={() => handlePowerOption("sleep")}>
             <FontAwesomeIcon icon={faMoon} /> Sleep
@@ -249,7 +267,7 @@ const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
             <FontAwesomeIcon icon={faPowerOff} /> Shut Down
           </div>
         </PowerOptions>
-      </UserSection>
+      </PowerSection>
     </MenuContainer>
   );
 };

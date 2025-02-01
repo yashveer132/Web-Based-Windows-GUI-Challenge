@@ -6,9 +6,7 @@ import {
   faVolumeUp,
   faBatteryFull,
   faBell,
-  faLock,
   faPlane,
-  faMoon,
 } from "@fortawesome/free-solid-svg-icons";
 import { faWindows } from "@fortawesome/free-brands-svg-icons";
 import { faBluetoothB } from "@fortawesome/free-brands-svg-icons";
@@ -24,6 +22,10 @@ const TaskbarContainer = styled.div`
   align-items: center;
   padding: 0 10px;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+  @media (max-width: 600px) {
+    height: 45px;
+    padding: 0 5px;
+  }
 `;
 
 const StartButton = styled.button`
@@ -38,13 +40,12 @@ const StartButton = styled.button`
   font-weight: bold;
   border-radius: 8px;
   transition: background-color 0.3s ease;
-
   &:hover {
     background-color: #4a4a5e;
   }
-
   @media (max-width: 600px) {
     padding: 10px 15px;
+    font-size: 1rem;
   }
 `;
 
@@ -54,7 +55,6 @@ const TaskbarItems = styled.div`
   flex: 1;
   overflow-x: auto;
   gap: 5px;
-
   &::-webkit-scrollbar {
     display: none;
   }
@@ -74,9 +74,12 @@ const TaskbarItem = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
   &:hover {
     background-color: #5a5a6e;
+  }
+  @media (max-width: 600px) {
+    padding: 6px 10px;
+    font-size: 0.9rem;
   }
 `;
 
@@ -93,11 +96,9 @@ const TrayIcon = styled.div`
   color: white;
   transition: opacity 0.3s ease;
   position: relative;
-
   &:hover {
     opacity: 0.8;
   }
-
   &::after {
     content: attr(data-tooltip);
     position: absolute;
@@ -111,13 +112,12 @@ const TrayIcon = styled.div`
     display: none;
     white-space: nowrap;
   }
-
   &:hover::after {
     display: block;
   }
-
   @media (max-width: 600px) {
     margin-left: 5px;
+    font-size: 16px;
   }
 `;
 
@@ -129,9 +129,9 @@ const Clock = styled.div`
   padding: 5px 10px;
   border-radius: 5px;
   font-weight: bold;
-
   @media (max-width: 600px) {
     font-size: 12px;
+    padding: 4px 8px;
   }
 `;
 
@@ -148,15 +148,12 @@ const Taskbar = ({
     const networkSimulation = setInterval(() => {
       setIsConnected((prevState) => !prevState);
     }, 5000);
-
     return () => clearInterval(networkSimulation);
   }, []);
-
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
-
   const toggleWindow = (windowId) => {
     if (activeWindowId === windowId) {
       closeWindow(windowId);
@@ -164,14 +161,12 @@ const Taskbar = ({
       onWindowClick(windowId);
     }
   };
-
   return (
     <TaskbarContainer>
       <StartButton onClick={onStartClick}>
         <FontAwesomeIcon icon={faWindows} style={{ marginRight: "10px" }} />
         Start
       </StartButton>
-
       <TaskbarItems>
         {windows.map((window) => (
           <TaskbarItem
@@ -183,7 +178,6 @@ const Taskbar = ({
           </TaskbarItem>
         ))}
       </TaskbarItems>
-
       <SystemTray>
         <TrayIcon data-tooltip="Wi-Fi Connected">
           <FontAwesomeIcon icon={faWifi} />

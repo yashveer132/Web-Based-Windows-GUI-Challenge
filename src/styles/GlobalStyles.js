@@ -17,7 +17,6 @@ const GlobalStyles = createGlobalStyle`
     --notification-bg: ${({ theme }) => theme.windowBg};
     --notification-text: ${({ theme }) => theme.textColor};
 
-    /* Theme hover effects */
     --dark-hover: #333;
     --dark-text-hover: #fff;
 

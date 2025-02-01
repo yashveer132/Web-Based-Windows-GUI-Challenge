@@ -64,13 +64,16 @@ export function ThemeContextProvider({ initialTheme = "dark", children }) {
 
   const applyRandomTheme = () => {
     const themeNames = Object.keys(THEMES);
-    const randomTheme = themeNames[Math.floor(Math.random() * themeNames.length)];
+    const randomTheme =
+      themeNames[Math.floor(Math.random() * themeNames.length)];
     setThemeName(randomTheme);
     setTheme(THEMES[randomTheme]);
   };
 
   return (
-    <ThemeContext.Provider value={{ themeName, theme, changeTheme, applyRandomTheme }}>
+    <ThemeContext.Provider
+      value={{ themeName, theme, changeTheme, applyRandomTheme }}
+    >
       {children}
     </ThemeContext.Provider>
   );

@@ -1,22 +1,17 @@
 import { useState, useCallback, useEffect } from "react";
+import CryptoJS from "crypto-js";
 
 function encryptData(data, password) {
-  const str = JSON.stringify(data);
-  const reversed = str.split("").reverse().join("");
-  const b64 = btoa(password + reversed);
-  return b64;
+  const dataString = JSON.stringify(data);
+  return CryptoJS.AES.encrypt(dataString, password).toString();
 }
 
 function decryptData(encrypted, password) {
   try {
-    const decoded = atob(encrypted);
-    if (!decoded.startsWith(password)) {
-      return null;
-    }
-    const reversed = decoded.slice(password.length);
-    const normal = reversed.split("").reverse().join("");
-    return JSON.parse(normal);
-  } catch {
+    const bytes = CryptoJS.AES.decrypt(encrypted, password);
+    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  } catch (error) {
+    console.error("Decryption failed", error);
     return null;
   }
 }
@@ -33,64 +28,51 @@ const initialFS = {
 };
 
 export const useFileSystem = () => {
-  const [fileSystem, setFileSystem] = useState(initialFS);
-  const [isEncrypted, setIsEncrypted] = useState(false);
-
   const storageKey = "webos_fileSystem";
   const passwordKey = "webos_fsPassword";
+  const encryptionFlagKey = "webos_fsEncrypted";
+
+  const [fileSystem, setFileSystem] = useState(initialFS);
+  const [isEncrypted, setIsEncrypted] = useState(
+    () => localStorage.getItem(encryptionFlagKey) === "true"
+  );
+  const [locked, setLocked] = useState(
+    () => localStorage.getItem(encryptionFlagKey) === "true"
+  );
 
   const loadFileSystemFromLocalStorage = useCallback(() => {
     const raw = localStorage.getItem(storageKey);
     if (!raw) return;
-
-    if (!isEncrypted) {
+    const encryptionEnabled =
+      localStorage.getItem(encryptionFlagKey) === "true";
+    if (!encryptionEnabled) {
       try {
         const parsed = JSON.parse(raw);
         setFileSystem(parsed);
-      } catch {}
-      return;
-    }
-
-    const savedPw = localStorage.getItem(passwordKey) || "";
-    if (!savedPw) {
-      alert("Encrypted FS but no password found. Cannot load.");
-      return;
-    }
-
-    const enteredPw = prompt("Enter the encryption password:");
-    if (!enteredPw) {
-      return;
-    }
-    if (enteredPw !== savedPw) {
-      alert("Wrong password. FileSystem locked.");
-      return;
-    }
-
-    const decrypted = decryptData(raw, enteredPw);
-    if (decrypted) {
-      setFileSystem(decrypted);
-    } else {
-      alert("Decrypt failed: wrong password or corrupted data.");
-    }
-  }, [isEncrypted]);
-
-  const saveFileSystemToLocalStorage = useCallback(
-    (fs) => {
-      if (!fs) return;
-      if (!isEncrypted) {
-        localStorage.setItem(storageKey, JSON.stringify(fs));
-      } else {
-        const savedPw = localStorage.getItem(passwordKey) || "";
-        if (!savedPw) {
-          alert("No password set but isEncrypted = true. Something's off.");
-          return;
-        }
-        const enc = encryptData(fs, savedPw);
-        localStorage.setItem(storageKey, enc);
+      } catch (error) {
+        console.error("Failed to parse file system JSON", error);
       }
-    },
-    [isEncrypted]
-  );
+      return;
+    }
+    setLocked(true);
+  }, []);
+
+  const saveFileSystemToLocalStorage = useCallback((fs) => {
+    if (!fs) return;
+    const encryptionEnabled =
+      localStorage.getItem(encryptionFlagKey) === "true";
+    if (!encryptionEnabled) {
+      localStorage.setItem(storageKey, JSON.stringify(fs));
+    } else {
+      const savedPw = localStorage.getItem(passwordKey) || "";
+      if (!savedPw) {
+        alert("No password set but encryption is enabled.");
+        return;
+      }
+      const enc = encryptData(fs, savedPw);
+      localStorage.setItem(storageKey, enc);
+    }
+  }, []);
 
   useEffect(() => {
     saveFileSystemToLocalStorage(fileSystem);
@@ -100,7 +82,7 @@ export const useFileSystem = () => {
     setFileSystem((prev) => {
       const newFS = structuredClone(prev);
       let current = newFS;
-      const parts = path.split("/");
+      const parts = path.split("/").filter(Boolean);
       for (const part of parts) {
         if (current[part]?.type === "folder") {
           current = current[part].children;
@@ -118,7 +100,7 @@ export const useFileSystem = () => {
     setFileSystem((prev) => {
       const newFS = structuredClone(prev);
       let current = newFS;
-      const parts = path.split("/");
+      const parts = path.split("/").filter(Boolean);
       for (const part of parts) {
         if (current[part]?.type === "folder") {
           current = current[part].children;
@@ -136,7 +118,7 @@ export const useFileSystem = () => {
     setFileSystem((prev) => {
       const newFS = structuredClone(prev);
       let current = newFS;
-      const parts = path.split("/");
+      const parts = path.split("/").filter(Boolean);
       const itemName = parts.pop();
       for (const part of parts) {
         if (current[part]?.type === "folder") {
@@ -155,7 +137,7 @@ export const useFileSystem = () => {
     setFileSystem((prev) => {
       const newFS = structuredClone(prev);
       let current = newFS;
-      const parts = oldPath.split("/");
+      const parts = oldPath.split("/").filter(Boolean);
       const oldName = parts.pop();
       for (const part of parts) {
         if (current[part]?.type === "folder") {
@@ -173,9 +155,14 @@ export const useFileSystem = () => {
 
   const enableEncryption = useCallback(
     (pw) => {
+      if (!pw) {
+        alert("Password cannot be empty.");
+        return;
+      }
       localStorage.setItem(passwordKey, pw);
+      localStorage.setItem(encryptionFlagKey, "true");
       setIsEncrypted(true);
-
+      setLocked(true);
       saveFileSystemToLocalStorage(fileSystem);
     },
     [fileSystem, saveFileSystemToLocalStorage]
@@ -183,14 +170,36 @@ export const useFileSystem = () => {
 
   const disableEncryption = useCallback(() => {
     localStorage.removeItem(passwordKey);
+    localStorage.setItem(encryptionFlagKey, "false");
     setIsEncrypted(false);
+    setLocked(false);
     saveFileSystemToLocalStorage(fileSystem);
   }, [fileSystem, saveFileSystemToLocalStorage]);
+
+  const unlockFileSystem = useCallback((enteredPw) => {
+    const savedPw = localStorage.getItem(passwordKey) || "";
+    if (!enteredPw || enteredPw !== savedPw) {
+      alert("Wrong password.");
+      return false;
+    }
+    const raw = localStorage.getItem(storageKey);
+    const decrypted = decryptData(raw, enteredPw);
+    if (decrypted) {
+      setFileSystem(decrypted);
+      setLocked(false);
+      return true;
+    } else {
+      alert("Decrypt failed: wrong password or corrupted data.");
+      return false;
+    }
+  }, []);
 
   return {
     fileSystem,
     isEncrypted,
+    locked,
     loadFileSystemFromLocalStorage,
+    unlockFileSystem,
     enableEncryption,
     disableEncryption,
     createFile,
