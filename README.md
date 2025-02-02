@@ -38,7 +38,8 @@ This document outlines the project’s architecture, features, implementation de
 
 The project is hosted on **Netlify**, ensuring fast loading times, secure access, and compatibility across major browsers. The live demo is available at the following link:
 
-[**Live Demo**](https://web-based-windows-gui.netlify.app/)
+[**Live Demo**](https://web-based-windows-gui.netlify.app/) <br>
+[**GitHub Repository**](https://github.com/yashveer132/Web-Based-Windows-GUI-Challenge)
 
 ---
 
@@ -203,6 +204,4 @@ To set up and run the project locally, follow these steps:
 ## **Conclusion**
 
 This project successfully demonstrates the potential of web technologies to replicate desktop OS environments. By combining features like user profiles, a virtual file system, and system utilities, it offers an engaging and practical experience. Future enhancements could include real-time collaboration, cloud integration, and the addition of third-party applications.
-
-For more information, visit the [GitHub Repository](https://github.com/yashveer132/Web-Based-Windows-GUI-Challenge).
 
