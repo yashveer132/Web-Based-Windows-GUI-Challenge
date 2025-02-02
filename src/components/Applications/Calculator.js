@@ -7,6 +7,13 @@ const Wrapper = styled.div`
   align-items: center;
   min-height: 100vh;
   background-color: #121212;
+  padding: 20px;
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
 `;
 
 const CalculatorContainer = styled.div`
@@ -21,10 +28,13 @@ const CalculatorContainer = styled.div`
   margin: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
-  margin-bottom: 150px;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 15px;
     gap: 8px;
+  }
+  @media (max-width: 480px) {
+    padding: 10px;
+    gap: 6px;
   }
 `;
 
@@ -41,7 +51,11 @@ const Display = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    padding: 12px;
+    font-size: 28px;
+  }
+  @media (max-width: 480px) {
     padding: 10px;
     font-size: 24px;
   }
@@ -51,7 +65,10 @@ const DisplayOperator = styled.span`
   color: #f0a500;
   font-size: 24px;
   padding-left: 10px;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+  @media (max-width: 480px) {
     font-size: 18px;
   }
 `;
@@ -71,7 +88,11 @@ const Button = styled.button`
   &:active {
     opacity: 0.8;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    padding: 12px;
+    font-size: 18px;
+  }
+  @media (max-width: 480px) {
     padding: 10px;
     font-size: 16px;
   }

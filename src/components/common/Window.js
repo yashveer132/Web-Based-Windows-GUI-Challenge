@@ -17,9 +17,19 @@ const StyledRnd = styled(Rnd)`
   box-shadow: ${(props) =>
     props.isActive ? "0 0 10px rgba(0,0,0,0.5)" : "none"};
   overflow: hidden;
-  @media (max-width: 600px) {
-    min-width: 200px !important;
-    min-height: 150px !important;
+  width: 100%;
+  height: 100%;
+  @media (max-width: 1024px) {
+    min-width: 70vw !important;
+    min-height: 50vh !important;
+  }
+  @media (max-width: 768px) {
+    min-width: 85vw !important;
+    min-height: 60vh !important;
+  }
+  @media (max-width: 480px) {
+    min-width: 95vw !important;
+    min-height: 70vh !important;
   }
 `;
 
@@ -41,8 +51,11 @@ const TitleBar = styled.div`
 
 const Title = styled.span`
   font-weight: 600;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     font-size: 0.9rem;
+  }
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
   }
 `;
 
@@ -63,7 +76,7 @@ const WindowButton = styled.button`
   &:active {
     opacity: 0.7;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 0 4px;
   }
 `;
@@ -72,6 +85,13 @@ const Content = styled.div`
   flex: 1;
   overflow: auto;
   background-color: var(--window-bg);
+  padding: 10px;
+  @media (max-width: 768px) {
+    padding: 8px;
+  }
+  @media (max-width: 480px) {
+    padding: 5px;
+  }
 `;
 
 const Window = ({
@@ -104,8 +124,8 @@ const Window = ({
   return (
     <StyledRnd
       default={{ x: 40, y: 3, width: 1200, height: 580 }}
-      minWidth={300}
-      minHeight={200}
+      minWidth={200}
+      minHeight={150}
       bounds="window"
       onMouseDown={onFocus}
       isActive={isActive}

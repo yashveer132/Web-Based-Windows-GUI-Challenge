@@ -1,182 +1,187 @@
-# Web-Based Windows GUI Operating System
+# **Web-Based Windows GUI Operating System**
 
-## Project Overview
-
-This project presents a web-based Windows-like desktop environment built entirely in the browser, offering users a familiar desktop computing experience. The application is designed as a Single Page Application (SPA) with a highly interactive and responsive user interface, featuring multiple applications and system components similar to a traditional desktop operating system.
-
----
-
-## Key Features
-
-### 1. Multiple User Profiles
-
-- Users can create, rename, and delete profiles.
-- Each profile is password-protected (optional in our case) and includes personalized data.
-- Upon login, users enter the virtual desktop environment.
-
----
-
-### 2. Taskbar
-
-- **Start Menu:**
-  - Expandable menu triggered by the Start button.
-  - Integrated search functionality to search applications.
-  - Options for logout, sleep, restart, and shut down.
-  - Displays the active user’s profile name.
-- **System Tray:**
-  - Includes network status simulation, volume control, Bluetooth status, and battery indicators.
-  - Real-time clock.
-- **Running Applications:**
-  - Displays tabs for currently running applications.
+## **Index**
+- [**Web-Based Windows GUI Operating System**](#web-based-windows-gui-operating-system)
+  - [**Index**](#index)
+  - [**Project Overview**](#project-overview)
+  - [**Deployment**](#deployment)
+  - [**Key Features**](#key-features)
+    - [**1. Multiple User Profiles**](#1-multiple-user-profiles)
+    - [**2. Taskbar**](#2-taskbar)
+    - [**3. Desktop Environment**](#3-desktop-environment)
+    - [**4. Virtual File System**](#4-virtual-file-system)
+    - [**5. Applications**](#5-applications)
+  - [**Bonus Features**](#bonus-features)
+  - [**Solution Architecture**](#solution-architecture)
+    - [**Frontend:**](#frontend)
+    - [**State Management:**](#state-management)
+    - [**File System Simulation:**](#file-system-simulation)
+    - [**User Profiles:**](#user-profiles)
+    - [**Additional Enhancements:**](#additional-enhancements)
+  - [**Implementation Details**](#implementation-details)
+  - [**Technologies Used**](#technologies-used)
+  - [**Application Setup and Running Instructions**](#application-setup-and-running-instructions)
+  - [**Evaluation Criteria Fulfillment**](#evaluation-criteria-fulfillment)
+  - [**Conclusion**](#conclusion)
 
 ---
 
-### 3. Desktop Environment
+## **Project Overview**
 
-- Fully interactive desktop workspace.
-- Support for desktop icons (draggable).
-- Right-click context menu.
-- Resizable and draggable application windows.
-- Window management features including minimize, maximize, and close.
+The **Web-Based Windows GUI Operating System** reimagines the desktop experience within a browser, offering users a familiar Windows-like environment with modern web capabilities. Built as a Single Page Application (SPA), this project delivers interactive system utilities, a virtual file system, and core applications while maintaining fast, secure, and persistent functionality across user sessions.
+
+This document outlines the project’s architecture, features, implementation details, and deployment instructions.
 
 ---
 
-### 4. Virtual File System
+## **Deployment**
 
-- Emulates a standard directory structure.
-- Users can create, delete, and rename files and folders.
-- Built-in encryption for secure file management.
+The project is hosted on **Netlify**, ensuring fast loading times, secure access, and compatibility across major browsers. The live demo is available at the following link:
 
----
-
-### 5. Applications
-
-- **Text Editor:**
-  - Notepad-like application with features for creating and editing text files.
-  - Save, print (with print preview and print simulation), and download functionality.
-  - Word and character counters for document statistics.
-
-- **Calculator:**
-  - Basic arithmetic operations and advanced calculations.
-
-- **File Explorer:**
-  - Browsing and managing files and directories within the virtual file system.
-
-- **Command Prompt:**
-  - Supports multiple commands for basic system interactions.
-
-- **Games:**
-  - Three games: Tic Tac Toe, Snake, and Minesweeper.
-
-- **System Notification Manager:**
-  - Displays system-level notifications for user actions.
-
-- **Clipboard Manager:**
-  - Manages copied content, allowing users to access clipboard history.
-
-- **Screen Capture Tool:**
-  - Enables users to capture screenshots and download the images locally.
+[**Live Demo**](https://web-based-windows-gui.netlify.app/)
 
 ---
 
-## Solution Architecture
+## **Key Features**
 
-- **Frontend:**
-  - Built using React (v19.0.0) and styled components for a modern, dynamic, and interactive user interface.
-  - Utilizes libraries such as `react-router-dom` for seamless navigation and `react-icons` for rich visual elements.
+The project replicates key OS components to deliver a robust user experience. Below are the major features that make up the core system:
 
-- **State Management:**
-  - Centralized and efficient state management using `@reduxjs/toolkit` (v2.5.1) for application logic and local storage for persistent user settings.
-  - `localforage` (v1.10.0) ensures offline data storage and synchronization.
-
-- **File System Simulation:**
-  - Simulates a virtual file system within the browser, allowing users to create, delete, and rename files and folders.
-  - Secure storage is achieved using `crypto-js` (v4.2.0) for encryption capabilities.
-
-- **User Profiles:**
-  - Supports multiple user profiles, each with personalized settings, preferences, and data storage.
-  - Profile data is maintained persistently across sessions using local storage and in-memory mechanisms.
-
-- **Additional Enhancements:**
-  - Interactive desktop environment powered by `react-dnd` and `react-rnd`.
-  - Visual enhancements using Font Awesome and React Icons.
+### **1. Multiple User Profiles**
+- Users can create, delete, and manage profiles, each with personalized settings and data.
+- Password protection (optional in our case) for enhanced security.
+- Persistent user data stored locally within the browser.
 
 ---
 
-## Implementation Details
+### **2. Taskbar**
+- **Start Menu:** Provides access to applications, search functionality, user display name, and system options like logout, restart, and shutdown.  
+- **System Tray:** Displays network status, volume control, battery levels, Bluetooth status, and a real-time clock.  
+- **Running Applications:** Shows tabs for open applications, allowing easy switching between tasks.  
 
-### Project Structure
+---
 
-- **/src:** Contains the core application code organized into components, contexts, hooks, and utility files.
-- **/public:** Static files and assets such as images and configuration files.
-- **/components:** Reusable UI components including applications (TextEditor, Calculator, Games), the taskbar, desktop, and common features like context menus and notifications.
-  - **Applications:** Implements core applications like the clipboard manager, command prompt, file explorer, text editor, games, and more.
-  - **Common:** Contains shared components like context menus, notifications, and window management.
-  - **Desktop:** Manages desktop icons and the main interactive desktop environment.
-  - **Login:** Handles user authentication and profile selection.
-  - **Taskbar & StartMenu:** Manages the taskbar, start menu, and running applications.
-- **/contexts:** Context providers such as the theme context for managing global themes.
-- **/data:** Initial data and configuration files.
-- **/hooks:** Custom React hooks for managing the file system, icons, windows, and notifications.
-- **/store:** Centralized state management using Redux.
-- **/styles:** Global styling using styled components.
-- **/utils:** Utility functions for storage and other operations.
+### **3. Desktop Environment**
+- Interactive desktop with draggable icons.  
+- Context menus for right-click actions.  
+- Resizable and draggable windows for system applications.  
+- Window management options, including minimize, maximize, and close.  
 
-### Technologies Used
+---
 
-- **Frontend:** Built using React with core dependencies to create a highly interactive and modular Single Page Application (SPA) architecture. Styled components are used for dynamic and customizable UI design.
-  - **Key Dependencies:**
-    - `react` (v19.0.0)
-    - `react-dom` (v19.0.0)
-    - `react-router-dom` (v7.1.4)
-    - `styled-components` (v6.1.14)
+### **4. Virtual File System**
+- Emulates a directory structure, allowing users to create, rename, and delete files or folders.  
+- Supports file encryption using browser-based cryptographic libraries.  
+- Persistent storage across user sessions.  
 
-- **State Management:** Centralized application state management through `@reduxjs/toolkit` and local storage to maintain persistent user data and settings across sessions.
-  - **Key Dependencies:**
-    - `@reduxjs/toolkit` (v2.5.1)
-    - `react-redux` (v9.2.0)
-    - `localforage` (v1.10.0) for efficient offline data storage.
+---
 
-- **Cross-Browser Support:** Ensures compatibility across major browsers, leveraging tools and configurations defined in the project’s `browserslist`.
+### **5. Applications**
+The system includes a variety of core and bonus applications to replicate desktop functionality:
 
-- **Encryption:** Secure file storage and virtual file system implemented using browser-based encryption techniques via `crypto-js`.
-  - **Key Dependency:**
-    - `crypto-js` (v4.2.0)
+- **Text Editor:** Create and edit text files with options to save, download, and print documents. Includes word and character counters.  
+- **Calculator:** Supports basic mathematical operations.  
+- **File Explorer:** Allows users to browse, manage, and interact with files and folders.  
+- **Command Prompt:** Simulates a terminal for executing basic commands and system interactions.  
+- **Games:** Pre-installed games include Tic Tac Toe, Snake, and Minesweeper.  
+- **System Notification Manager:** Manages and displays real-time notifications.  
+- **Clipboard Manager:** Tracks clipboard history and allows users to access copied content.  
+- **Screen Capture Tool:** Captures desktop screenshots and allows downloading locally.  
 
-- **Interactive Desktop Environment:** Utilizes `react-dnd` and `react-rnd` for implementing draggable and resizable application windows, creating an interactive desktop experience.
-  - **Key Dependencies:**
-    - `react-dnd` (v16.0.1)
-    - `react-dnd-html5-backend` (v16.0.1)
-    - `react-rnd` (v10.4.14)
+---
 
-- **System Utilities:**
-  - **Screen Capture:** Implemented using `html2canvas` for capturing and exporting screenshots.
-    - **Key Dependency:** `html2canvas` (v1.4.1)
-  
-- **Icons and Visual Elements:** Integrated using Font Awesome icons and React Icons for a modern UI.
-  - **Key Dependencies:**
-    - `@fortawesome/fontawesome-svg-core` (v6.7.2)
-    - `@fortawesome/free-brands-svg-icons` (v6.7.2)
-    - `@fortawesome/free-solid-svg-icons` (v6.7.2)
-    - `@fortawesome/react-fontawesome` (v0.2.2)
-    - `react-icons` (v5.4.0)
+## **Bonus Features**
 
+- **Encrypted Virtual File System:** Ensures secure storage with built-in encryption.  
+- **Multiple User Support:** Allows personalized sessions for different users.  
+- **System Notifications:** Real-time alerts for key system activities.  
+- **Network Status Simulation:** Simulates network connectivity and displays corresponding indicators.  
+- **Print Simulation:** Provides print previews and output simulation.  
+- **Command Prompt:** Allows basic terminal commands and system-level interactions.  
+- **Clipboard Manager:** Tracks clipboard history for user convenience.  
+- **Screen Capture Tool:** Captures screenshots of the current desktop view.  
 
-### Application Setup and Running Instructions
+---
 
-1. Clone the repository from GitHub:
+## **Solution Architecture**
+
+The solution architecture is designed to ensure scalability, interactivity, and data persistence. The key components and their respective technologies are as follows:
+
+### **Frontend:**
+- Built using **React (v19.0.0)** and styled components for a modern, dynamic, and interactive user interface.  
+- Utilizes libraries like **react-router-dom** for seamless navigation and **react-icons** for rich visual enhancements.
+
+### **State Management:**
+- Centralized and efficient state management using **@reduxjs/toolkit (v2.5.1)** for application logic and local storage for persistent user settings.  
+- **localforage (v1.10.0)** ensures offline data storage and synchronization, enabling data persistence even when the user is offline.
+
+### **File System Simulation:**
+- Simulates a virtual file system within the browser, allowing users to create, delete, and rename files and folders.  
+- Secure storage is achieved using **crypto-js (v4.2.0)** for encrypting file contents and ensuring data security.
+
+### **User Profiles:**
+- Supports multiple user profiles, each with personalized settings, preferences, and data storage.  
+- Profile data is maintained persistently across sessions using local storage and in-memory mechanisms.
+
+### **Additional Enhancements:**
+- **Interactive Desktop Environment:** Powered by **react-dnd** and **react-rnd** for draggable icons and resizable application windows.  
+- **Visual Enhancements:** Enriched using Font Awesome and **React Icons** to provide a sleek, modern interface.
+
+These components work together to create a desktop environment that is highly interactive, secure, and user-friendly.
+
+---
+
+## **Implementation Details**
+
+The project follows a modular structure to maintain code readability and scalability:
+
+| **Directory**       | **Description**                                                                 |
+|--------------------|---------------------------------------------------------------------------------|
+| `/src`              | Core application code containing components, contexts, hooks, and utility files.|
+| `/public`           | Static assets, images, and configuration files.                                |
+| `/components`       | Reusable UI components including taskbars, windows, and system applications.   |
+| `/store`            | Centralized Redux store for state management.                                  |
+| `/styles`           | Global styles using styled-components.                                         |
+| `/utils`            | Utility functions for file system operations, storage, and notifications.      |
+
+---
+
+## **Technologies Used**
+
+The project leverages modern web technologies for optimal performance and functionality:
+
+| **Technology**       | **Purpose**                                                               |
+|---------------------|---------------------------------------------------------------------------|
+| **React (v19.0.0)**  | Building the core Single Page Application (SPA) architecture.             |
+| **Redux Toolkit**    | State management and persistent data handling.                           |
+| **Styled Components**| Dynamic UI styling.                                                       |
+| **LocalForage**      | Browser-based offline data storage and synchronization.                   |
+| **Crypto-JS**        | File encryption for secure storage within the virtual file system.        |
+| **React DND & RND**  | Enables draggable and resizable desktop icons and windows.                |
+| **HTML2Canvas**      | Captures desktop screenshots.                                             |
+| **React Icons**      | Enhances UI with modern icons and visual elements.                        |
+
+---
+
+## **Application Setup and Running Instructions**
+
+To set up and run the project locally, follow these steps:
+
+1. Clone the project repository:
    ```bash
    git clone https://github.com/yashveer132/Web-Based-Windows-GUI-Challenge
    cd Web-Based-Windows-GUI-Challenge
    ```
+
 2. Install dependencies:
    ```bash
    npm install
    ```
+
 3. Start the development server:
    ```bash
    npm start
    ```
+
 4. Open the application in your browser:
    ```
    http://localhost:3000
@@ -184,53 +189,20 @@ This project presents a web-based Windows-like desktop environment built entirel
 
 ---
 
-## Bonus Features
+## **Evaluation Criteria Fulfillment**
 
-- **Virtual File System Encryption:**
-  - Secure storage of user files with encryption.
-
-- **Multiple User Support:**
-  - Profiles store individualized user settings, applications, and preferences.
-
-- **System Notifications:**
-  - Alerts and updates from various system applications.
-
-- **Network Status Simulation:**
-  - Simulates internet connectivity and related network indicators.
-
-- **Print Simulation:**
-  - Simulates printing via print preview and file output.
-
-- **Command Prompt or Terminal Emulator:**
-  - Basic command execution and system interactions.
-
-- **Simple Game Applications:**
-  - Includes Tic Tac Toe, Snake, and Minesweeper.
-
-- **Clipboard Manager:**
-  - Manages copied content and provides clipboard history.
-
-- **Screen Capture Tool:**
-  - Captures and downloads images of the current desktop.
+- **Innovation:** Features such as clipboard management, encrypted file systems, and network status simulations showcase creativity.  
+- **Technical Complexity:** Combines file management, user profiles, and system notifications into a unified, browser-based desktop environment.  
+- **Effective Technology Use:** Leverages React, Redux, local storage, and cryptography to deliver a secure, scalable solution.  
+- **User Experience:** Intuitive, responsive, and familiar interface resembling a traditional OS.  
+- **Documentation:** Detailed documentation covering architecture, setup, and deployment.  
+- **Code Quality:** Clean, maintainable, and modular code following industry best practices.  
 
 ---
 
-## Evaluation Criteria Fulfillment
+## **Conclusion**
 
-- **Innovation and Creativity:** Implemented multiple bonus features including clipboard management, screen capture, system notifications, and a command prompt.
-- **Technical Complexity:** Built a fully functional Windows-like GUI environment with encryption, multiple user profiles, and persistent state management.
-- **Effective Use of Technologies:** Used browser-based storage and encryption techniques to create a secure, efficient environment.
-- **User Experience:** Delivered a familiar, responsive, and intuitive desktop experience.
-- **Documentation Quality:** Comprehensive documentation detailing the solution architecture and implementation.
-- **Code Quality:** Organized and well-commented code following best practices.
+This project successfully demonstrates the potential of web technologies to replicate desktop OS environments. By combining features like user profiles, a virtual file system, and system utilities, it offers an engaging and practical experience. Future enhancements could include real-time collaboration, cloud integration, and the addition of third-party applications.
 
----
-
-## Conclusion
-
-This project successfully replicates a Windows-like desktop environment within the browser, providing core functionalities such as file management, multi-user support, system applications, and a responsive taskbar. With innovative features and secure data management, it showcases an advanced, web-based operating system interface.
-
----
-
-For more details, please visit the project repository on [GitHub](https://github.com/yashveer132/Web-Based-Windows-GUI-Challenge).
+For more information, visit the [GitHub Repository](https://github.com/yashveer132/Web-Based-Windows-GUI-Challenge).
 

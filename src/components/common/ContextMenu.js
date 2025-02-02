@@ -12,8 +12,11 @@ const MenuContainer = styled.div`
   min-width: 220px;
   border-radius: 5px;
   overflow: hidden;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 1rem;
+  @media (max-width: 1024px) {
+    min-width: 180px;
+  }
   @media (max-width: 600px) {
     min-width: 150px;
   }
@@ -27,8 +30,11 @@ const MenuItem = styled.div`
   &:hover {
     background-color: #3d3d3d;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 1024px) {
     padding: 10px 12px;
+  }
+  @media (max-width: 600px) {
+    padding: 8px 10px;
   }
 `;
 
@@ -43,6 +49,9 @@ const SubMenuContainer = styled.div`
   min-width: 200px;
   border-radius: 5px;
   font-size: 0.9rem;
+  @media (max-width: 1024px) {
+    min-width: 160px;
+  }
   @media (max-width: 600px) {
     min-width: 140px;
   }
@@ -69,7 +78,7 @@ const ContextMenu = ({ x, y, items, onClose }) => {
         left: x + 220 > window.innerWidth ? window.innerWidth - 230 : x,
         top: y + 300 > window.innerHeight ? window.innerHeight - 310 : y,
       }}
-      onClick={(e) => e.stopPropagation()} // Prevent closing on click inside
+      onClick={(e) => e.stopPropagation()}
     >
       {items.map((item, index) => {
         if (item.type === "separator") {

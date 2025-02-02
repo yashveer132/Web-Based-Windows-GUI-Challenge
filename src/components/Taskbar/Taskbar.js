@@ -12,49 +12,50 @@ import { faWindows } from "@fortawesome/free-brands-svg-icons";
 import { faBluetoothB } from "@fortawesome/free-brands-svg-icons";
 
 const TaskbarContainer = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 55px;
+  height: clamp(3.5rem, 6vh, 4rem);
   background-color: #1e1e2f;
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 1vw;
+  gap: 0.5vw;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
-  @media (max-width: 600px) {
-    height: 45px;
-    padding: 0 5px;
-  }
+  touch-action: manipulation;
 `;
 
 const StartButton = styled.button`
   background-color: #2a2a3d;
   border: none;
-  padding: 15px 25px;
+  padding: clamp(0.5rem, 1.5vh, 1rem) clamp(1rem, 2vw, 1.5rem);
   display: flex;
   align-items: center;
   cursor: pointer;
   color: white;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
+  font-size: clamp(1rem, 1.5vmin, 1.2rem);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  gap: 0.5vw;
+
   &:hover {
     background-color: #4a4a5e;
   }
-  @media (max-width: 600px) {
-    padding: 10px 15px;
-    font-size: 1rem;
+
+  @media (orientation: portrait) {
+    padding: 0.5rem 1rem;
   }
 `;
 
 const TaskbarItems = styled.div`
   display: flex;
-  margin-left: 10px;
   flex: 1;
   overflow-x: auto;
-  gap: 5px;
+  gap: 0.5vmin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -63,23 +64,20 @@ const TaskbarItems = styled.div`
 const TaskbarItem = styled.div`
   position: relative;
   background-color: ${(props) => (props.isActive ? "#4a4a5e" : "#2a2a3d")};
-  padding: 8px 12px;
-  border-radius: 5px;
+  padding: clamp(0.3rem, 1vh, 0.5rem) clamp(0.6rem, 1vw, 1rem);
+  border-radius: 0.4rem;
   color: white;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 5px;
-  transition: background-color 0.3s ease;
+  gap: 0.5vw;
+  transition: all 0.2s ease;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: clamp(0.8rem, 1.5vmin, 1rem);
+  min-width: max-content;
+
   &:hover {
     background-color: #5a5a6e;
-  }
-  @media (max-width: 600px) {
-    padding: 6px 10px;
-    font-size: 0.9rem;
   }
 `;
 
@@ -87,52 +85,48 @@ const SystemTray = styled.div`
   display: flex;
   align-items: center;
   margin-left: auto;
+  gap: clamp(0.3rem, 1vw, 1rem);
 `;
 
 const TrayIcon = styled.div`
-  margin-left: 10px;
-  font-size: 18px;
-  cursor: pointer;
   color: white;
-  transition: opacity 0.3s ease;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  font-size: clamp(1rem, 1.8vmin, 1.2rem);
   position: relative;
-  &:hover {
-    opacity: 0.8;
-  }
-  &::after {
+  padding: 0.3rem;
+  min-width: 1.8em;
+  text-align: center;
+
+  &:hover::after {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: 30px;
-    left: -10px;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
     background-color: #333;
     color: white;
-    padding: 5px 8px;
-    border-radius: 5px;
-    font-size: 0.85rem;
-    display: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.4rem;
+    font-size: clamp(0.7rem, 1.5vmin, 0.9rem);
     white-space: nowrap;
+    pointer-events: none;
   }
-  &:hover::after {
-    display: block;
-  }
-  @media (max-width: 600px) {
-    margin-left: 5px;
-    font-size: 16px;
+
+  @media (pointer: coarse) {
+    &:hover::after {
+      display: none;
+    }
   }
 `;
 
 const Clock = styled.div`
-  margin-left: 10px;
-  font-size: 14px;
+  font-size: clamp(0.8rem, 1.8vmin, 1rem);
   color: white;
   background-color: #2a2a3d;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-weight: bold;
-  @media (max-width: 600px) {
-    font-size: 12px;
-    padding: 4px 8px;
-  }
+  padding: clamp(0.3rem, 1vh, 0.5rem) clamp(0.6rem, 1vw, 1rem);
+  border-radius: 0.4rem;
+  min-width: max-content;
 `;
 
 const Taskbar = ({
@@ -143,14 +137,6 @@ const Taskbar = ({
   minimizeWindow,
 }) => {
   const [time, setTime] = useState(new Date());
-  const [isConnected, setIsConnected] = useState(true);
-
-  useEffect(() => {
-    const networkSimulation = setInterval(() => {
-      setIsConnected((prevState) => !prevState);
-    }, 5000);
-    return () => clearInterval(networkSimulation);
-  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -158,18 +144,16 @@ const Taskbar = ({
   }, []);
 
   const toggleWindow = (windowId) => {
-    if (activeWindowId === windowId) {
-      minimizeWindow(windowId);
-    } else {
-      onWindowClick(windowId);
-    }
+    activeWindowId === windowId
+      ? minimizeWindow(windowId)
+      : onWindowClick(windowId);
   };
 
   return (
     <TaskbarContainer>
       <StartButton onClick={onStartClick}>
-        <FontAwesomeIcon icon={faWindows} style={{ marginRight: "10px" }} />
-        Start
+        <FontAwesomeIcon icon={faWindows} />
+        <span>Start</span>
       </StartButton>
       <TaskbarItems>
         {windows.map((window) => (

@@ -118,7 +118,10 @@ function InnerApp({ currentUser, onLogin, onLogout }) {
           { label: "Name", onClick: () => addNotification("Sorted by Name") },
           { label: "Size", onClick: () => addNotification("Sorted by Size") },
           { label: "Type", onClick: () => addNotification("Sorted by Type") },
-          { label: "Date Modified", onClick: () => addNotification("Sorted by Date") },
+          {
+            label: "Date Modified",
+            onClick: () => addNotification("Sorted by Date"),
+          },
           { type: "separator" },
           {
             label: "Refresh",
@@ -137,8 +140,6 @@ function InnerApp({ currentUser, onLogin, onLogout }) {
     },
     [addNotification, loadIconsFromLocalStorage, openWindow]
   );
-  
-  
 
   const handleCloseContextMenu = useCallback(() => {
     setContextMenu(null);

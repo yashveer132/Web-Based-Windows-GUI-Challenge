@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
+
 const fadeIn = keyframes`
   from { opacity: 0; }
   to { opacity: 1; }
 `;
+
 const GameContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -16,38 +18,62 @@ const GameContainer = styled.div`
   justify-content: center;
   margin-bottom: 10px;
   margin-top: -60px;
-  @media (max-width: 600px) {
+  @media (max-width: 1024px) {
+    padding: 18px;
+    margin-top: -40px;
+  }
+  @media (max-width: 768px) {
     padding: 15px;
     margin-top: -20px;
   }
+  @media (max-width: 480px) {
+    padding: 10px;
+    margin-top: -10px;
+  }
 `;
+
 const Canvas = styled.canvas`
   background-color: #333;
   border: 2px solid #555;
   margin-top: 20px;
   display: block;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  @media (max-width: 600px) {
+  width: 400px;
+  height: 400px;
+  @media (max-width: 768px) {
     width: 300px;
     height: 300px;
   }
+  @media (max-width: 480px) {
+    width: 250px;
+    height: 250px;
+  }
 `;
+
 const Info = styled.div`
   text-align: center;
   margin-top: 10px;
   font-size: 18px;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     font-size: 16px;
   }
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
+
 const HighScore = styled.div`
   margin-top: 10px;
   font-size: 16px;
   color: #f0a500;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     font-size: 14px;
   }
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
+
 const Modal = styled.div`
   position: fixed;
   top: 50%;
@@ -61,26 +87,38 @@ const Modal = styled.div`
   text-align: center;
   width: 300px;
   max-width: 80%;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     width: 90%;
     padding: 20px;
   }
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
+
 const ModalTitle = styled.h2`
   color: white;
   margin-bottom: 15px;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     font-size: 1.5rem;
   }
+  @media (max-width: 480px) {
+    font-size: 1.2rem;
+  }
 `;
+
 const ModalContent = styled.div`
   margin-bottom: 20px;
   font-size: 18px;
   color: white;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     font-size: 16px;
   }
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
+
 const ModalButton = styled.button`
   padding: 10px 20px;
   background-color: #f0a500;
@@ -93,11 +131,16 @@ const ModalButton = styled.button`
   &:hover {
     background-color: #d48900;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 8px 16px;
     font-size: 14px;
   }
+  @media (max-width: 480px) {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
 `;
+
 const Snake = ({ addNotification }) => {
   const canvasRef = useRef(null);
   const [context, setContext] = useState(null);
@@ -114,12 +157,14 @@ const Snake = ({ addNotification }) => {
   ]);
   const [direction, setDirection] = useState("RIGHT");
   const [food, setFood] = useState({ x: 15, y: 10 });
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     setContext(ctx);
   }, []);
+
   useEffect(() => {
     function handleKeyDown(e) {
       switch (e.key) {
@@ -142,16 +187,19 @@ const Snake = ({ addNotification }) => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [direction]);
+
   useEffect(() => {
     let gameInterval = setInterval(gameLoop, 150);
     return () => clearInterval(gameInterval);
   });
+
   function gameLoop() {
     if (!context || gameOverTriggered) return;
     context.fillStyle = "#333";
     context.fillRect(0, 0, 400, 400);
     context.fillStyle = "red";
     context.fillRect(food.x * 20, food.y * 20, 20, 20);
+
     let head = { ...snake[0] };
     switch (direction) {
       case "UP":
@@ -169,6 +217,7 @@ const Snake = ({ addNotification }) => {
       default:
         break;
     }
+
     if (
       head.x < 0 ||
       head.x >= 20 ||
@@ -179,6 +228,7 @@ const Snake = ({ addNotification }) => {
       handleGameOver();
       return;
     }
+
     let newSnake = [{ ...head }, ...snake];
     if (head.x === food.x && head.y === food.y) {
       setScore(score + 1);
@@ -189,12 +239,14 @@ const Snake = ({ addNotification }) => {
     } else {
       newSnake.pop();
     }
+
     setSnake(newSnake);
     context.fillStyle = "lime";
     newSnake.forEach((seg) => {
       context.fillRect(seg.x * 20, seg.y * 20, 20, 20);
     });
   }
+
   function handleGameOver() {
     if (gameOverTriggered) return;
     setGameOverTriggered(true);
@@ -205,6 +257,7 @@ const Snake = ({ addNotification }) => {
     }
     setShowModal(true);
   }
+
   function restartGame() {
     setSnake([
       { x: 10, y: 10 },
@@ -217,6 +270,7 @@ const Snake = ({ addNotification }) => {
     setShowModal(false);
     setGameOverTriggered(false);
   }
+
   return (
     <GameContainer>
       <Info>Score: {score}</Info>
@@ -236,4 +290,5 @@ const Snake = ({ addNotification }) => {
     </GameContainer>
   );
 };
+
 export default Snake;

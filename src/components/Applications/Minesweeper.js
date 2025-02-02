@@ -10,7 +10,10 @@ const Container = styled.div`
   color: white;
   padding: 20px;
   font-family: "Arial, sans-serif";
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    padding: 18px;
+  }
+  @media (max-width: 480px) {
     padding: 15px;
   }
 `;
@@ -18,7 +21,10 @@ const Container = styled.div`
 const Title = styled.h2`
   margin-bottom: 20px;
   color: #f0a500;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    font-size: 1.7rem;
+  }
+  @media (max-width: 480px) {
     font-size: 1.5rem;
   }
 `;
@@ -28,9 +34,13 @@ const Grid = styled.div`
   grid-template-columns: repeat(${(props) => props.size}, 40px);
   gap: 5px;
   margin: 20px 0;
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(${(props) => props.size}, 30px);
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(${(props) => props.size}, 35px);
     gap: 4px;
+  }
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(${(props) => props.size}, 30px);
+    gap: 3px;
   }
 `;
 
@@ -53,7 +63,12 @@ const Cell = styled.button`
     color: white;
     font-weight: bold;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 480px) {
     width: 30px;
     height: 30px;
     font-size: 0.8rem;
@@ -62,7 +77,10 @@ const Cell = styled.button`
 
 const ButtonBar = styled.div`
   margin-top: 20px;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    margin-top: 18px;
+  }
+  @media (max-width: 480px) {
     margin-top: 15px;
   }
 `;
@@ -79,9 +97,13 @@ const ActionButton = styled.button`
   &:hover {
     background-color: #d48900;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 10px 20px;
     font-size: 0.9rem;
+  }
+  @media (max-width: 480px) {
+    padding: 8px 16px;
+    font-size: 0.8rem;
   }
 `;
 
@@ -103,11 +125,13 @@ const Minesweeper = ({ addNotification }) => {
   const numMines = 5;
   const [board, setBoard] = useState(createBoard(size, numMines));
   const [gameOver, setGameOver] = useState(false);
+
   useEffect(() => {
     if (gameOver && addNotification) {
       addNotification("Game Over! You hit a mine.");
     }
   }, [gameOver, addNotification]);
+
   const handleCellClick = (index) => {
     if (gameOver || board[index].revealed) return;
     if (board[index].isMine) {
@@ -116,12 +140,14 @@ const Minesweeper = ({ addNotification }) => {
       revealCell(index);
     }
   };
+
   const revealCell = (index) => {
     const updatedBoard = board.map((cell, i) =>
       i === index ? { ...cell, revealed: true } : cell
     );
     setBoard(updatedBoard);
   };
+
   const handleRestart = () => {
     setBoard(createBoard(size, numMines));
     setGameOver(false);
@@ -129,6 +155,7 @@ const Minesweeper = ({ addNotification }) => {
       addNotification("New game started!");
     }
   };
+
   return (
     <Container>
       <Title>Minesweeper</Title>

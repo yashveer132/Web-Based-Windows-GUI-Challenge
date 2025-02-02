@@ -16,6 +16,7 @@ const GlobalStyles = createGlobalStyle`
     --icon-bg: rgba(255, 255, 255, 0.2);
     --notification-bg: ${({ theme }) => theme.windowBg};
     --notification-text: ${({ theme }) => theme.textColor};
+    
 
     --dark-hover: #333;
     --dark-text-hover: #fff;
@@ -51,6 +52,12 @@ const GlobalStyles = createGlobalStyle`
       font-size: 14px;
     }
   }
+    
+  @media (pointer: coarse) {
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
 `;
 
 export default GlobalStyles;

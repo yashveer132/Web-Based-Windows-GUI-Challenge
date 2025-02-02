@@ -26,7 +26,7 @@ const slideUp = keyframes`
 `;
 
 const NotificationContainer = styled.div`
-  position: absolute;
+  position: fixed;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
@@ -35,8 +35,13 @@ const NotificationContainer = styled.div`
   gap: 10px;
   z-index: 9999;
   width: 300px;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    width: 80%;
+    top: 10px;
+  }
+  @media (max-width: 480px) {
     width: 90%;
+    top: 5px;
   }
 `;
 
@@ -53,8 +58,11 @@ const NotificationBubble = styled.div`
     ${slideUp} 0.5s ease forwards ${(props) => props.duration || 3}s;
   transition: background-color 0.3s ease;
   opacity: 1;
-  @media (max-width: 600px) {
-    padding: 10px 15px;
+  @media (max-width: 768px) {
+    padding: 12px 16px;
+  }
+  @media (max-width: 480px) {
+    padding: 10px 12px;
   }
 `;
 
@@ -68,8 +76,11 @@ const CloseButton = styled.button`
   display: flex;
   align-items: center;
   transition: opacity 0.2s ease;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     font-size: 1rem;
+  }
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
   }
 `;
 

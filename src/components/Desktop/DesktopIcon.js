@@ -8,35 +8,44 @@ const IconWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
+  width: clamp(70px, 10vmax, 100px);
+  height: clamp(70px, 10vmax, 100px);
   cursor: pointer;
   color: var(--text-color);
   background-color: ${({ $isDragging }) =>
     $isDragging ? "var(--icon-bg)" : "transparent"};
-  border-radius: 5px;
-  transition: background-color 0.2s;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
   user-select: none;
+  touch-action: manipulation;
 
   &:hover {
     background-color: var(--icon-bg);
   }
 
-  @media (max-width: 600px) {
-    width: 70px;
-    height: 70px;
+  @media (orientation: portrait) and (max-width: 768px) {
+    width: clamp(60px, 12vmin, 80px);
+    height: clamp(60px, 12vmin, 80px);
+  }
+
+  @media (pointer: coarse) {
+    min-width: 68px;
+    min-height: 68px;
   }
 `;
 
 const IconLabel = styled.span`
-  margin-top: 8px;
-  font-size: 14px;
+  margin-top: 0.5rem;
+  font-size: clamp(0.75rem, 1.5vmin, 1rem);
   text-align: center;
   word-wrap: break-word;
-  max-width: 100%;
+  max-width: 95%;
+  line-height: 1.2;
+  padding: 0 0.2rem;
 
-  @media (max-width: 600px) {
-    font-size: 12px;
+  @media (orientation: portrait) and (max-width: 768px) {
+    font-size: clamp(0.65rem, 2vmin, 0.85rem);
+    margin-top: 0.3rem;
   }
 `;
 
@@ -54,8 +63,13 @@ const DesktopIcon = ({ id, icon, label, left, top, onDoubleClick }) => {
       ref={drag}
       $isDragging={isDragging}
       onDoubleClick={onDoubleClick}
+      role="button"
+      aria-label={`${label} application icon`}
     >
-      <FontAwesomeIcon icon={icon} size="3x" />
+      <FontAwesomeIcon
+        icon={icon}
+        size={window.innerWidth <= 480 ? "2x" : "3x"}
+      />
       <IconLabel>{label}</IconLabel>
     </IconWrapper>
   );

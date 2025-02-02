@@ -11,8 +11,14 @@ const EditorContainer = styled.div`
   background-color: #1e1e1e;
   color: #ffffff;
   font-family: "Segoe UI", sans-serif;
-  @media (max-width: 600px) {
+  @media (max-width: 1024px) {
+    padding: 18px;
+  }
+  @media (max-width: 768px) {
     padding: 15px;
+  }
+  @media (max-width: 480px) {
+    padding: 10px;
   }
 `;
 
@@ -24,8 +30,12 @@ const Toolbar = styled.div`
   border-radius: 8px;
   margin-bottom: 10px;
   flex-wrap: wrap;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 8px;
+    gap: 8px;
+  }
+  @media (max-width: 480px) {
+    padding: 6px;
     gap: 5px;
   }
 `;
@@ -42,9 +52,13 @@ const Button = styled.button`
   &:hover {
     background-color: #357ab7;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 8px 12px;
     font-size: 0.9rem;
+  }
+  @media (max-width: 480px) {
+    padding: 6px 10px;
+    font-size: 0.8rem;
   }
 `;
 
@@ -54,9 +68,13 @@ const FileNameInput = styled.input`
   background-color: #2a2a2a;
   color: #ffffff;
   border-radius: 5px;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 8px;
     font-size: 0.9rem;
+  }
+  @media (max-width: 480px) {
+    padding: 6px;
+    font-size: 0.8rem;
   }
 `;
 
@@ -70,11 +88,17 @@ const TextArea = styled.textarea`
   color: #ffffff;
   font-size: 1rem;
   resize: none;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    width: 80%;
+    height: 250px;
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 480px) {
     width: 90%;
     height: 200px;
     padding: 10px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -82,8 +106,11 @@ const Footer = styled.div`
   margin-top: 10px;
   font-size: 1rem;
   color: #cccccc;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     font-size: 0.9rem;
+  }
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
   }
 `;
 
@@ -110,10 +137,15 @@ const PrintPreviewContent = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  @media (max-width: 600px) {
-    width: 90%;
+  @media (max-width: 768px) {
+    width: 85%;
     height: 300px;
     padding: 15px;
+  }
+  @media (max-width: 480px) {
+    width: 90%;
+    height: 250px;
+    padding: 10px;
   }
 `;
 
@@ -123,9 +155,13 @@ const PrintContent = styled.div`
   padding: 10px 0;
   white-space: pre-wrap;
   text-align: left;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 8px 0;
     font-size: 0.9rem;
+  }
+  @media (max-width: 480px) {
+    padding: 6px 0;
+    font-size: 0.8rem;
   }
 `;
 
@@ -150,8 +186,12 @@ const PrintSimulation = styled.div`
   border-radius: 8px;
   font-size: 1.5rem;
   display: ${(props) => (props.show ? "block" : "none")};
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 15px;
+    font-size: 1.3rem;
+  }
+  @media (max-width: 480px) {
+    padding: 10px;
     font-size: 1.2rem;
   }
 `;

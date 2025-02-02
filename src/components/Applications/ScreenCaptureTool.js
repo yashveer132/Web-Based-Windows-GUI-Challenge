@@ -13,9 +13,17 @@ const Container = styled.div`
   font-family: "Arial, sans-serif";
   padding: 20px;
   gap: 20px;
-  @media (max-width: 600px) {
+  @media (max-width: 1024px) {
+    padding: 18px;
+    gap: 18px;
+  }
+  @media (max-width: 768px) {
     padding: 15px;
     gap: 15px;
+  }
+  @media (max-width: 480px) {
+    padding: 10px;
+    gap: 10px;
   }
 `;
 
@@ -24,13 +32,19 @@ const Instructions = styled.div`
   line-height: 1.8;
   h2 {
     font-size: 1.8rem;
-    @media (max-width: 600px) {
-      font-size: 1.5rem;
+    @media (max-width: 768px) {
+      font-size: 1.6rem;
+    }
+    @media (max-width: 480px) {
+      font-size: 1.4rem;
     }
   }
   p {
     font-size: 1rem;
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
+      font-size: 0.95rem;
+    }
+    @media (max-width: 480px) {
       font-size: 0.9rem;
     }
   }
@@ -47,10 +61,13 @@ const ButtonContainer = styled.div`
   display: flex;
   gap: 15px;
   margin-bottom: 20px;
-  @media (max-width: 600px) {
-    gap: 10px;
+  @media (max-width: 768px) {
+    gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
+  }
+  @media (max-width: 480px) {
+    gap: 10px;
   }
 `;
 
@@ -66,8 +83,12 @@ const CaptureButton = styled.button`
   &:hover {
     background-color: #357ab7;
   }
-  @media (max-width: 600px) {
-    padding: 10px 16px;
+  @media (max-width: 768px) {
+    padding: 10px 18px;
+    font-size: 0.95rem;
+  }
+  @media (max-width: 480px) {
+    padding: 8px 16px;
     font-size: 0.9rem;
   }
 `;
@@ -86,11 +107,7 @@ const DownloadButton = styled(CaptureButton)`
   }
 `;
 
-export default function ScreenCaptureTool({
-  addNotification,
-  fileSystem,
-  createFile,
-}) {
+export default function ScreenCaptureTool({ addNotification, createFile }) {
   const [isCropping, setIsCropping] = useState(false);
   const [startPos, setStartPos] = useState(null);
   const [cropRect, setCropRect] = useState(null);
@@ -159,20 +176,23 @@ export default function ScreenCaptureTool({
     }
     try {
       const fullCanvas = await html2canvas(document.body);
-      const ctx = fullCanvas.getContext("2d");
-
+      const scale = window.devicePixelRatio;
       const newCanvas = document.createElement("canvas");
-      newCanvas.width = cropRect.w;
-      newCanvas.height = cropRect.h;
+      newCanvas.width = cropRect.w * scale;
+      newCanvas.height = cropRect.h * scale;
       const newCtx = newCanvas.getContext("2d");
 
-      const imageData = ctx.getImageData(
-        cropRect.x,
-        cropRect.y,
-        cropRect.w,
-        cropRect.h
+      newCtx.drawImage(
+        fullCanvas,
+        cropRect.x * scale,
+        cropRect.y * scale,
+        cropRect.w * scale,
+        cropRect.h * scale,
+        0,
+        0,
+        cropRect.w * scale,
+        cropRect.h * scale
       );
-      newCtx.putImageData(imageData, 0, 0);
 
       const dataURL = newCanvas.toDataURL("image/png");
       if (createFile) {

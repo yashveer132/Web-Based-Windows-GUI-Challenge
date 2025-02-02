@@ -21,13 +21,16 @@ const ExplorerContainer = styled.div`
   border-radius: 10px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
-  
 
   @media (max-width: 768px) {
     width: 100vw;
     height: 100vh;
-    padding: 10px;
+    padding: 15px;
     border-radius: 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
   }
 `;
 
@@ -60,6 +63,16 @@ const Button = styled.button`
     background-color: #555;
     cursor: not-allowed;
   }
+
+  @media (max-width: 768px) {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
 `;
 
 const Input = styled.input`
@@ -69,6 +82,14 @@ const Input = styled.input`
   background-color: #333;
   color: #fff;
   border-radius: 5px;
+
+  @media (max-width: 768px) {
+    padding: 8px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 6px;
+  }
 `;
 
 const BreadcrumbContainer = styled.div`
@@ -93,6 +114,14 @@ const FileList = styled.div`
   padding: 10px;
   background-color: #1f232e;
   border-radius: 8px;
+
+  @media (max-width: 768px) {
+    padding: 8px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 6px;
+  }
 `;
 
 const FileItemRow = styled.div`
@@ -107,6 +136,14 @@ const FileItemRow = styled.div`
 
   &:hover {
     background-color: #32374d;
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 6px;
   }
 `;
 
@@ -133,6 +170,16 @@ const ActionButton = styled.button`
   &:hover {
     background-color: #d9534f;
   }
+
+  @media (max-width: 768px) {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 3px 6px;
+    font-size: 0.8rem;
+  }
 `;
 
 const ActionButtonRename = styled(ActionButton)`
@@ -154,6 +201,10 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
 `;
 
 const ModalContent = styled.div`
@@ -167,6 +218,14 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
+
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
 `;
 
 const ImagePreview = styled.img`

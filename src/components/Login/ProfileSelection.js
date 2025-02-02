@@ -45,6 +45,7 @@ const ProfileItem = styled.div`
   align-items: center;
   transition: all 0.3s ease;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+
   &:hover {
     background: linear-gradient(135deg, #5a5af7, #6b6bff);
     transform: translateY(-4px);
@@ -67,6 +68,7 @@ const ProfileInput = styled.input`
   color: #ffffff;
   outline: none;
   transition: 0.3s;
+
   &:focus {
     border-color: #0078d4;
     box-shadow: 0px 0px 8px #0078d4;
@@ -83,6 +85,7 @@ const EditIcon = styled(FaEdit)`
   font-size: 1.4rem;
   cursor: pointer;
   transition: color 0.3s ease;
+
   &:hover {
     color: #ffca2c;
   }
@@ -93,6 +96,7 @@ const SaveIcon = styled(FaSave)`
   font-size: 1.4rem;
   cursor: pointer;
   transition: color 0.3s ease;
+
   &:hover {
     color: #66bb6a;
   }
@@ -103,6 +107,7 @@ const DeleteIcon = styled(FaTrash)`
   font-size: 1.4rem;
   cursor: pointer;
   transition: color 0.3s ease;
+
   &:hover {
     color: #ff1c1c;
   }
@@ -121,6 +126,7 @@ const NewProfileInput = styled.input`
   border: 2px solid rgba(255, 255, 255, 0.2);
   outline: none;
   transition: 0.3s;
+
   &:focus {
     border-color: #0078d4;
     box-shadow: 0px 0px 8px #0078d4;
@@ -139,6 +145,7 @@ const AddButton = styled.button`
   transition: all 0.3s ease;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
   width: 100%;
+
   &:hover {
     background: linear-gradient(135deg, #008bf7, #0065c1);
     transform: translateY(-3px);

@@ -16,23 +16,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const slideUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 `;
 
 const MenuContainer = styled.div`
-  position: absolute;
-  bottom: 50px;
-  left: 10px;
-  width: 340px;
+  position: fixed;
+  bottom: clamp(4rem, 8vh, 5rem);
+  left: 1vw;
+  width: min(90vw, 400px);
   background-color: #1e1e2f;
-  border-radius: 10px;
+  border-radius: clamp(0.5rem, 1.5vmin, 1rem);
   border: 1px solid #333;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
   animation: ${slideUp} 0.3s ease-out forwards;
@@ -40,43 +34,40 @@ const MenuContainer = styled.div`
   flex-direction: column;
   z-index: 1000;
   overflow: hidden;
-  @media (max-width: 600px) {
-    width: 260px;
-  }
+  max-height: 80vh;
 `;
 
 const SearchBar = styled.div`
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: clamp(0.5rem, 1.5vmin, 1rem);
   background-color: #333;
-  gap: 10px;
+  gap: clamp(0.5rem, 1.5vmin, 1rem);
 `;
 
 const SearchInput = styled.input`
   flex: 1;
-  padding: 8px;
+  padding: clamp(0.4rem, 1.5vmin, 0.8rem);
   border: none;
   background-color: #1e1e2f;
   color: white;
-  border-radius: 5px;
-  font-size: 0.9rem;
+  border-radius: 0.4rem;
+  font-size: clamp(0.9rem, 1.8vmin, 1.1rem);
+
   &:focus {
-    outline: none;
-    border: 1px solid #4a90e2;
+    outline: 2px solid #4a90e2;
   }
 `;
 
 const MenuItems = styled.div`
-  padding: 10px;
+  padding: clamp(0.5rem, 1.5vmin, 1rem);
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 10px;
-  max-height: 300px;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(clamp(5rem, 15vmin, 7rem), 1fr)
+  );
+  gap: clamp(0.5rem, 1.5vmin, 1rem);
   overflow-y: auto;
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-  }
 `;
 
 const MenuItem = styled.div`
@@ -85,62 +76,53 @@ const MenuItem = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #29293d;
-  padding: 15px;
-  border-radius: 8px;
+  padding: clamp(0.5rem, 1.5vmin, 1rem);
+  border-radius: 0.5rem;
   cursor: pointer;
   color: white;
-  font-size: 0.85rem;
-  text-align: center;
-  transition: background-color 0.3s ease;
-  height: 90px;
+  font-size: clamp(0.8rem, 1.8vmin, 1rem);
+  aspect-ratio: 1;
+  transition: all 0.2s ease;
+
   &:hover {
     background-color: #4a4a5e;
   }
+
   .emoji {
-    font-size: 1.8rem;
-    margin-bottom: 5px;
-  }
-  @media (max-width: 600px) {
-    height: 70px;
-    padding: 10px;
-    font-size: 0.75rem;
-    .emoji {
-      font-size: 1.5rem;
-    }
+    font-size: clamp(1.5rem, 4vmin, 2rem);
+    margin-bottom: 0.5vh;
   }
 `;
 
 const UserSection = styled.div`
-  padding: 10px;
+  padding: clamp(0.5rem, 1.5vmin, 1rem);
   background-color: #29293d;
   color: white;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid #444;
-  @media (max-width: 600px) {
+  gap: 1rem;
+  font-size: clamp(0.9rem, 1.8vmin, 1.1rem);
+
+  @media (max-width: 480px) {
     flex-direction: column;
-    gap: 5px;
     text-align: center;
   }
 `;
 
 const PowerSection = styled.div`
-  padding: 10px;
+  padding: clamp(0.5rem, 1.5vmin, 1rem);
   background-color: #29293d;
-  border-top: 1px solid #444;
   display: flex;
   justify-content: center;
-  align-items: center;
 `;
 
 const LogoutButton = styled.div`
   cursor: pointer;
-  color: white;
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 1rem;
+  gap: 0.5rem;
+  transition: color 0.2s ease;
+
   &:hover {
     color: #ff4f4f;
   }
@@ -148,23 +130,18 @@ const LogoutButton = styled.div`
 
 const PowerOptions = styled.div`
   display: flex;
-  gap: 15px;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  justify-content: center;
-  align-items: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  font-size: clamp(0.9rem, 1.8vmin, 1.1rem);
+
   div {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 0.5rem;
+    transition: color 0.2s ease;
+
     &:hover {
       color: #ff4f4f;
     }
-  }
-  @media (max-width: 600px) {
-    gap: 10px;
-    font-size: 0.9rem;
   }
 `;
 
@@ -173,16 +150,24 @@ const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
   const menuRef = useRef(null);
 
   useEffect(() => {
-    function handleClickOutside(e) {
+    const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         onClose();
       }
-    }
+    };
+
+    const handleEscape = (e) => e.key === "Escape" && onClose();
+
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+      document.addEventListener("keydown", handleEscape);
     }
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen, onClose]);
 
@@ -190,11 +175,13 @@ const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
     setSearchTerm(e.target.value);
   }, []);
 
-  const filteredApps = useMemo(() => {
-    return apps.filter((app) =>
-      app.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [apps, searchTerm]);
+  const filteredApps = useMemo(
+    () =>
+      apps.filter((app) =>
+        app.title.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [apps, searchTerm]
+  );
 
   const handleItemClick = useCallback(
     (app) => {
@@ -203,11 +190,6 @@ const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
     },
     [onClose]
   );
-
-  const handlePowerOption = (option) => {
-    if (option === "logout") onLogout();
-    alert(`${option} initiated!`);
-  };
 
   return (
     <MenuContainer ref={menuRef} $isOpen={isOpen}>
@@ -231,19 +213,23 @@ const StartMenu = ({ isOpen, onClose, apps, currentUser, onLogout }) => {
       <UserSection>
         <div>{currentUser?.name}</div>
         <LogoutButton onClick={onLogout}>
-          <FontAwesomeIcon icon={faSignOutAlt} /> Log Out
+          <FontAwesomeIcon icon={faSignOutAlt} />
+          <span>Log Out</span>
         </LogoutButton>
       </UserSection>
       <PowerSection>
         <PowerOptions>
-          <div onClick={() => handlePowerOption("sleep")}>
-            <FontAwesomeIcon icon={faMoon} /> Sleep
+          <div onClick={() => alert("Sleep initiated!")}>
+            <FontAwesomeIcon icon={faMoon} />
+            <span>Sleep</span>
           </div>
-          <div onClick={() => handlePowerOption("restart")}>
-            <FontAwesomeIcon icon={faSyncAlt} /> Restart
+          <div onClick={() => alert("Restart initiated!")}>
+            <FontAwesomeIcon icon={faSyncAlt} />
+            <span>Restart</span>
           </div>
-          <div onClick={() => handlePowerOption("shutdown")}>
-            <FontAwesomeIcon icon={faPowerOff} /> Shut Down
+          <div onClick={() => alert("Shutdown initiated!")}>
+            <FontAwesomeIcon icon={faPowerOff} />
+            <span>Shut Down</span>
           </div>
         </PowerOptions>
       </PowerSection>

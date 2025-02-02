@@ -24,10 +24,14 @@ const Container = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  @media (max-width: 600px) {
-    padding: 15px;
+  @media (max-width: 768px) {
+    padding: 18px;
     max-width: 90vw;
     min-width: 260px;
+  }
+  @media (max-width: 480px) {
+    padding: 15px;
+    min-width: 220px;
   }
 `;
 
@@ -35,8 +39,11 @@ const CurrentThemeDisplay = styled.p`
   margin-bottom: 10px;
   font-size: 1.2rem;
   color: var(--text-color);
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     font-size: 1rem;
+  }
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
   }
 `;
 
@@ -46,7 +53,10 @@ const ThemeOptions = styled.div`
   gap: 15px;
   margin-bottom: 20px;
   width: 100%;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    gap: 12px;
+  }
+  @media (max-width: 480px) {
     gap: 10px;
   }
 `;
@@ -68,9 +78,13 @@ const ThemeButton = styled.button`
     background-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-3px);
   }
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 12px;
     font-size: 0.9rem;
+  }
+  @media (max-width: 480px) {
+    padding: 10px;
+    font-size: 0.8rem;
   }
 `;
 

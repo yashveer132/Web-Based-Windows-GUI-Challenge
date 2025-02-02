@@ -21,9 +21,14 @@ const GlassBox = styled.div`
   text-align: center;
   box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  @media (max-width: 600px) {
+
+  @media (max-width: 768px) {
     width: 90%;
     padding: 30px 20px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 20px;
   }
 `;
 
@@ -33,7 +38,12 @@ const Title = styled.h2`
   color: #ffffff;
   margin-bottom: 20px;
   text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.6);
-  @media (max-width: 600px) {
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+
+  @media (max-width: 480px) {
     font-size: 1.8rem;
   }
 `;
@@ -42,8 +52,13 @@ const Subtitle = styled.p`
   font-size: 1.1rem;
   color: #d0d0e1;
   margin-bottom: 25px;
-  @media (max-width: 600px) {
+
+  @media (max-width: 768px) {
     font-size: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
   }
 `;
 
@@ -59,9 +74,18 @@ const Input = styled.input`
   outline: none;
   transition: 0.3s;
   box-shadow: inset 0px 3px 5px rgba(0, 0, 0, 0.6);
+
   &:focus {
     border-color: #0078d4;
     box-shadow: 0px 0px 8px #0078d4;
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 8px;
   }
 `;
 
@@ -75,22 +99,35 @@ const Button = styled.button`
   border-radius: 8px;
   transition: all 0.3s ease;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+
   &:hover {
     background: linear-gradient(135deg, #008bf7, #0065c1);
     transform: translateY(-3px);
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.6);
   }
+
   &:active {
     transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px 25px;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 8px 20px;
   }
 `;
 
 export default function Login({ onLogin }) {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [password, setPassword] = useState("");
+
   const handleSelectProfile = (profileName) => {
     setSelectedProfile(profileName);
   };
+
   const handleLogin = () => {
     if (selectedProfile) {
       const userObj = { name: selectedProfile.trim() };
@@ -98,6 +135,7 @@ export default function Login({ onLogin }) {
       onLogin(userObj);
     }
   };
+
   if (!selectedProfile) {
     return (
       <LoginContainer>
@@ -105,6 +143,7 @@ export default function Login({ onLogin }) {
       </LoginContainer>
     );
   }
+
   return (
     <LoginContainer>
       <GlassBox>
