@@ -135,27 +135,29 @@ const Window = ({
 
   return (
     <StyledRnd
-      default={{
-        x: position.x,
-        y: position.y,
-        width: width || (window.innerWidth > 768 ? 600 : "95%"),
-        height: height || (window.innerWidth > 768 ? 400 : "80%"),
-      }}
-      minWidth={300}
-      minHeight={200}
-      bounds="window"
-      onMouseDown={onFocus}
-      $isActive={isActive}
-      $isMaximized={isMaximized}
-      enableResizing={!isMaximized}
-      disableDragging={isMaximized}
-      size={
-        isMaximized ? { width: "100vw", height: "100vh" } : { width, height }
-      }
-      position={isMaximized ? { x: 0, y: 0 } : position}
-      onDragStop={handleDragStop}
-      style={{ zIndex: isActive ? 999 : 998 }}
-    >
+  default={{
+    x: position.x,
+    y: position.y,
+    width: width || (window.innerWidth > 768 ? 600 : "95%"),
+    height: height || (window.innerWidth > 768 ? 400 : "80%"),
+  }}
+  minWidth={300}
+  minHeight={200}
+  bounds="window"
+  onMouseDown={onFocus}
+  $isActive={isActive}
+  $isMaximized={isMaximized}
+  enableResizing={!isMaximized}
+  disableDragging={isMaximized}
+  size={isMaximized ? { width: "100vw", height: "100vh" } : undefined}
+  position={isMaximized ? { x: 0, y: 0 } : position}
+  onDragStop={handleDragStop}
+  onResizeStop={(e, direction, ref, delta, position) => {
+    setPosition(position);
+  }}
+  style={{ zIndex: isActive ? 999 : 998 }}
+>
+
       <TitleBar $isActive={isActive}>
         <Title>{title}</Title>
         <ButtonGroup>
