@@ -1,3 +1,8 @@
+/**
+ * Implements a dynamic context menu that supports nested submenus, custom actions, and separators.
+ * The menu appears at the specified screen coordinates and adjusts its position to remain within the viewport.
+ */
+
 import React, { useState } from "react";
 import styled from "styled-components";
 

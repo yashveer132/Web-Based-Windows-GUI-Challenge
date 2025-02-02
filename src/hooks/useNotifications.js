@@ -1,3 +1,13 @@
+/**
+ * Custom hook for managing notifications in an application.
+ * Provides methods to add and remove notifications with optional timeout-based dismissal.
+ *
+ * Key Features:
+ * - Dynamically add notifications with unique IDs.
+ * - Automatically remove notifications after a specified duration (default: 5000ms).
+ * - Manual removal of notifications is also supported.
+ */
+
 import { useState, useCallback } from "react";
 
 export const useNotifications = () => {

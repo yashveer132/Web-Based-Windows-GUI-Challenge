@@ -1,3 +1,9 @@
+/**
+ * Implements a fully functional calculator with basic arithmetic operations, including addition,
+ * subtraction, multiplication, and division. The system efficiently handles input management,
+ * operator processing, and real-time result display while ensuring a responsive and well-structured layout.
+ */
+
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 

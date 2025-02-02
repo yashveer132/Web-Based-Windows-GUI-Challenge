@@ -1,3 +1,10 @@
+/**
+ * Provides a screen capture tool that allows users to select a portion of the screen and save the captured
+ * image. The component handles mouse-based selection, generates a screenshot using `html2canvas`, and
+ * offers options to download or save the capture programmatically. It includes notifications for user actions
+ * and offers a responsive design for various screen sizes.
+ */
+
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import html2canvas from "html2canvas";

@@ -1,3 +1,15 @@
+/**
+ * Custom hook for managing a virtual file system with optional encryption.
+ * Provides methods for creating, deleting, renaming files and folders while supporting
+ * persistent storage using localStorage.
+ *
+ * Key Features:
+ * - Supports file and folder creation, deletion, and renaming.
+ * - Maintains file system state in localStorage for persistence.
+ * - Optional AES-based encryption for secure file system storage.
+ * - Locking mechanism to protect encrypted content until unlocked with a password.
+ */
+
 import { useState, useCallback, useEffect } from "react";
 import CryptoJS from "crypto-js";
 

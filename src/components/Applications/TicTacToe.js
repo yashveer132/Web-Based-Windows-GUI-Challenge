@@ -1,3 +1,9 @@
+/**
+ * Implements a responsive Tic Tac Toe game with a 3x3 grid, supporting two players (X and O).
+ * The game checks for winning conditions or a draw after each move and displays the game status dynamically.
+ * Users can restart the game, and notifications are triggered for important actions such as moves and restarts.
+ */
+
 import React, { useState } from "react";
 import styled from "styled-components";
 

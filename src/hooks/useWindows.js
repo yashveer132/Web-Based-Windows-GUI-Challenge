@@ -1,3 +1,15 @@
+/**
+ * Custom hook for managing a dynamic windowing system.
+ * Provides functionalities to open, close, minimize, maximize, and focus windows
+ * with persistent state management using localStorage.
+ *
+ * Key Features:
+ * - Dynamically create and manage windows with unique IDs and initial sizes.
+ * - Maintain persistent window state per user via localStorage.
+ * - Manage window actions: open, close, minimize, maximize, and focus.
+ * - Track the currently active window and the user associated with the session.
+ */
+
 import { useState, useCallback, useEffect } from "react";
 
 export const useWindows = () => {
@@ -56,7 +68,7 @@ export const useWindows = () => {
     setWindows((prev) => {
       const existingIndex = prev.findIndex((w) => w.appId === appId);
       const { width, height } = getInitialSize();
-      
+
       if (existingIndex !== -1) {
         const existingWindow = prev[existingIndex];
         const updatedWindow = {

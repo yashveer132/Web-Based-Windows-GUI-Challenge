@@ -1,3 +1,10 @@
+/**
+ * Provides a clipboard management system that automatically tracks copied text and displays it
+ * in a list. Users can click on any saved item to copy it back to the clipboard, with an option
+ * to clear the clipboard history. The system maintains clipboard data persistence using
+ * localStorage and handles real-time updates via event listeners for copy events.
+ */
+
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 

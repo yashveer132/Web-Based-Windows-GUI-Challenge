@@ -1,3 +1,10 @@
+/**
+ * Implements a login interface with a profile selection step followed by password input.
+ * The component stores the selected user profile and triggers a callback on successful login.
+ * It features responsive, visually appealing UI design using a glassmorphic effect and
+ * dynamically adjusts for different screen sizes.
+ */
+
 import React, { useState } from "react";
 import styled from "styled-components";
 import ProfileSelection from "./ProfileSelection";

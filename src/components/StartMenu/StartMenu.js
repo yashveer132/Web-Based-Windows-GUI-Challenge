@@ -1,3 +1,10 @@
+/**
+ * Implements a dynamic Start Menu component with search functionality, user section, and system power options.
+ * The menu allows users to search for and launch applications, log out, or perform power-related actions such as
+ * sleep, restart, or shutdown. It handles user interactions, maintains accessibility, and dynamically filters
+ * the displayed apps based on the search term.
+ */
+
 import React, {
   useState,
   useCallback,

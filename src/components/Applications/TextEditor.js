@@ -1,3 +1,10 @@
+/**
+ * Implements a text editor with features for creating, editing, and saving text files. Users can save files,
+ * view a print preview, print content, and download files locally. The editor tracks word and character counts
+ * dynamically and provides responsive design adjustments for different screen sizes. Notifications are triggered
+ * for key actions like saving and printing.
+ */
+
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 

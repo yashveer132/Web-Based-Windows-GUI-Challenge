@@ -1,3 +1,10 @@
+/**
+ * Implements a dynamic desktop interface that displays draggable icons using the `react-dnd` library.
+ * Users can move icons freely across the screen, and double-clicking an icon triggers the opening of
+ * its associated application or window. The component supports responsive layouts for both desktop
+ * and mobile devices.
+ */
+
 import React from "react";
 import styled from "styled-components";
 import { useDrop } from "react-dnd";

@@ -1,3 +1,17 @@
+/**
+ * Main React application component for a WebOS-like desktop environment.
+ * Combines key features like dynamic window management, desktop icons, taskbar,
+ * start menu, and user login functionality into an interactive desktop interface.
+ *
+ * Key Features:
+ * - User authentication with persistent session storage.
+ * - Dynamic window management with features like open, close, minimize, maximize, and focus.
+ * - Drag-and-drop functionality for desktop icons using react-dnd.
+ * - File system management with encrypted storage options.
+ * - Notification system for contextual feedback.
+ * - Customizable themes using styled-components and context-based theming.
+ */
+
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { DndProvider } from "react-dnd";

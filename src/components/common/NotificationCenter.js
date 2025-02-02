@@ -1,3 +1,9 @@
+/**
+ * Implements a notification center that displays dismissible notifications with customizable durations.
+ * Notifications slide in and out with smooth animations and automatically disappear after the specified time.
+ * The component supports responsive design and provides manual dismissal through a close button.
+ */
+
 import React, { useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

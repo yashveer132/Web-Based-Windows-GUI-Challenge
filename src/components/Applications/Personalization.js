@@ -1,3 +1,9 @@
+/**
+ * Provides a user personalization interface for selecting and applying themes. It retrieves the user's
+ * saved theme from local storage, updates the application theme dynamically, and persists changes for future use.
+ * The component features a responsive grid of theme options and displays the currently selected theme.
+ */
+
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useThemeContext } from "../../contexts/ThemeContext";

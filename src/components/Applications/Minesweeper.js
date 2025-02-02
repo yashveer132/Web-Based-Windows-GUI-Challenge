@@ -1,3 +1,9 @@
+/**
+ * Implements a simple Minesweeper game with a 5x5 grid, where players reveal cells while avoiding hidden mines.
+ * The game generates a random board with specified mine locations, dynamically updates the state upon user interactions,
+ * and triggers notifications when the game is over or restarted. The grid and UI are responsive and styled for different screen sizes.
+ */
+
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 

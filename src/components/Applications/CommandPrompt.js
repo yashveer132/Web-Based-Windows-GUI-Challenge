@@ -1,3 +1,10 @@
+/**
+ * Implements an interactive command prompt interface that accepts and executes predefined commands,
+ * including displaying messages, sending notifications, listing available commands, and showing the
+ * current time. The component maintains a command history, provides suggestions based on user input,
+ * and dynamically updates the output area to reflect the executed commands.
+ */
+
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
 

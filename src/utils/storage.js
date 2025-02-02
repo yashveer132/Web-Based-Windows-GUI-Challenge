@@ -1,3 +1,13 @@
+/**
+ * Utility functions for managing user profiles, themes, and user-related data
+ * using localStorage in a WebOS-like environment.
+ *
+ * Key Features:
+ * - Manage stored user data: get, set, and remove users.
+ * - Maintain multiple user profiles with functions to add, edit, and remove profiles.
+ * - Handle user-specific themes by saving and retrieving theme preferences.
+ */
+
 export function getStoredUser() {
   const user = localStorage.getItem("webos_user");
   return user ? JSON.parse(user) : null;

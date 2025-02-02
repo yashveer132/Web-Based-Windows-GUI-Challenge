@@ -1,3 +1,11 @@
+/**
+ * Provides a context for managing and applying dynamic themes within the application.
+ * Includes predefined themes (dark, light, classic, pastel, pink) and functions to change
+ * or apply a random theme. The selected theme updates the visual properties of the UI,
+ * such as colors for the desktop background, windows, and text. The context is accessible
+ * through a custom hook for easy integration across components.
+ */
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 const THEMES = {

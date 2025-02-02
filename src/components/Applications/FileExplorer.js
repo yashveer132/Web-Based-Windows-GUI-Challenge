@@ -1,3 +1,10 @@
+/**
+ * Implements a file explorer system with support for creating, renaming, deleting, and navigating
+ * through files and folders. It features encryption toggling for secure storage, breadcrumb-based
+ * navigation, and modal previews for text and image files. The component dynamically updates the
+ * file structure and ensures persistent state through local storage.
+ */
+
 import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

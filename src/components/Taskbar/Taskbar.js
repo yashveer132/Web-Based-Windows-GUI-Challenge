@@ -1,3 +1,9 @@
+/**
+ * Implements a dynamic taskbar that includes a start button, open windows list, system tray icons, and a real-time clock.
+ * The taskbar provides functionality for toggling windows, displaying system notifications, and dynamically updating
+ * the current time. It supports responsive design, interactive tooltips, and smooth user interactions.
+ */
+
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

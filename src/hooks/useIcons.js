@@ -1,3 +1,13 @@
+/**
+ * Custom hook for managing a dynamic desktop icon system.
+ * Provides functionalities to load, save, move, and add icons with persistent state storage.
+ *
+ * Key Features:
+ * - Load and save icon positions to localStorage for state persistence.
+ * - Dynamically add new icons with unique IDs and default positions.
+ * - Move icons by updating their positions (left, top).
+ */
+
 import { useState, useCallback } from "react";
 
 export const useIcons = (initialIcons) => {

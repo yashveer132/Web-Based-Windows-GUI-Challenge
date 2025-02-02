@@ -1,3 +1,10 @@
+/**
+ * Represents a draggable desktop icon with a label and an associated action on double-click.
+ * The component utilizes the `react-dnd` library to enable dragging functionality and dynamically
+ * adjusts icon size and layout for responsive screen sizes. It provides a visual indicator when
+ * dragging and supports accessibility through ARIA attributes.
+ */
+
 import React from "react";
 import styled from "styled-components";
 import { useDrag } from "react-dnd";

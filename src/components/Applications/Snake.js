@@ -1,3 +1,10 @@
+/**
+ * Implements a classic Snake game using the HTML canvas for rendering and React for managing state.
+ * The game includes features like score tracking, high score persistence using local storage,
+ * randomized food placement, and responsive keyboard controls. When the game ends, a modal displays
+ * the final score and allows the user to restart.
+ */
+
 import React, { useEffect, useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 

@@ -1,4 +1,11 @@
-import React from "react";
+/**
+ * Implements a draggable and resizable window component using `react-rnd` with support for window operations
+ * like minimize, maximize, restore, and close. The component adjusts dynamically for small screens and provides
+ * customizable initial dimensions and positioning. The window actively handles user interactions and maintains
+ * an active/inactive state with visual cues.
+ */
+
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Rnd } from "react-rnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,7 +16,6 @@ import {
   faWindowRestore,
 } from "@fortawesome/free-solid-svg-icons";
 
-// Utility to check screen size
 const isSmallScreen = () => window.innerWidth <= 600;
 
 const StyledRnd = styled(Rnd)`
@@ -105,13 +111,22 @@ const Window = ({
   onFocus,
   isMaximized,
   isMinimized,
-  x,
-  y,
+  initialX,
+  initialY,
   width,
   height,
 }) => {
+  const [position, setPosition] = useState({
+    x: initialX || (window.innerWidth > 768 ? 40 : 0),
+    y: initialY || (window.innerWidth > 768 ? 30 : 0),
+  });
+
   const handleMaximizeToggle = () => {
     onMaximize(id);
+  };
+
+  const handleDragStop = (e, data) => {
+    setPosition({ x: data.x, y: data.y });
   };
 
   if (isMinimized) {
@@ -121,10 +136,10 @@ const Window = ({
   return (
     <StyledRnd
       default={{
-        x: window.innerWidth > 768 ? 40 : 0,
-        y: window.innerWidth > 768 ? 30 : 0,
-        width: window.innerWidth > 768 ? 600 : "95%",
-        height: window.innerWidth > 768 ? 400 : "80%",
+        x: position.x,
+        y: position.y,
+        width: width || (window.innerWidth > 768 ? 600 : "95%"),
+        height: height || (window.innerWidth > 768 ? 400 : "80%"),
       }}
       minWidth={300}
       minHeight={200}
@@ -135,11 +150,10 @@ const Window = ({
       enableResizing={!isMaximized}
       disableDragging={isMaximized}
       size={
-        isMaximized
-          ? { width: "100vw", height: "100vh" }
-          : { width, height }
+        isMaximized ? { width: "100vw", height: "100vh" } : { width, height }
       }
-      position={isMaximized ? { x: 0, y: 0 } : { x, y }}
+      position={isMaximized ? { x: 0, y: 0 } : position}
+      onDragStop={handleDragStop}
       style={{ zIndex: isActive ? 999 : 998 }}
     >
       <TitleBar $isActive={isActive}>
@@ -149,7 +163,6 @@ const Window = ({
             <FontAwesomeIcon icon={faWindowMinimize} />
           </WindowButton>
 
-          {/* Conditionally render the maximize/restore button */}
           {!isSmallScreen() && (
             <WindowButton onClick={handleMaximizeToggle}>
               <FontAwesomeIcon
