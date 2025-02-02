@@ -45,17 +45,28 @@ export const useWindows = () => {
     setCurrentUsername(username || null);
   }, []);
 
+  const getInitialSize = () => {
+    if (typeof window === "undefined") return { width: 600, height: 400 };
+    return window.innerWidth > 768
+      ? { width: 600, height: 400 }
+      : { width: "90%", height: "70%" };
+  };
+
   const openWindow = useCallback((appId) => {
     setWindows((prev) => {
       const existingIndex = prev.findIndex((w) => w.appId === appId);
+      const { width, height } = getInitialSize();
+      
       if (existingIndex !== -1) {
         const existingWindow = prev[existingIndex];
         const updatedWindow = {
           ...existingWindow,
           isMinimized: false,
-          isMaximized: true,
+          isMaximized: window.innerWidth <= 768,
           x: 0,
           y: 0,
+          width,
+          height,
         };
         const newWindows = [...prev];
         newWindows[existingIndex] = updatedWindow;
@@ -66,12 +77,12 @@ export const useWindows = () => {
           id: Date.now(),
           appId,
           title: appId,
-          x: 0,
-          y: 0,
-          width: 600,
-          height: 400,
+          x: window.innerWidth > 768 ? 40 : 0,
+          y: window.innerWidth > 768 ? 30 : 0,
+          width,
+          height,
           isMinimized: false,
-          isMaximized: true,
+          isMaximized: window.innerWidth <= 768,
           prevState: null,
         };
         setActiveWindowId(newWindow.id);
@@ -115,6 +126,8 @@ export const useWindows = () => {
               isMaximized: true,
               x: 0,
               y: 0,
+              width: "100vw",
+              height: "100vh",
             };
           } else {
             const { prevState } = window;

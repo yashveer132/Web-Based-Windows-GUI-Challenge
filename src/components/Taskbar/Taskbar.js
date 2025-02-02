@@ -56,6 +56,10 @@ const TaskbarItems = styled.div`
   scrollbar-width: none;
   -ms-overflow-style: none;
 
+  @media (max-width: 768px) {
+    display: none;
+  }
+
   &::-webkit-scrollbar {
     display: none;
   }

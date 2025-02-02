@@ -198,26 +198,25 @@ const ModalOverlay = styled.div`
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.8);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   z-index: 1000;
-
-  @media (max-width: 480px) {
-    padding: 10px;
-  }
+  padding: 20px;
 `;
 
 const ModalContent = styled.div`
   background-color: #282c34;
   padding: 20px;
   border-radius: 8px;
-  width: 90%;
+  width: 100%;
   max-width: 400px;
   color: #fff;
-  text-align: center;
   display: flex;
   flex-direction: column;
   gap: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  margin-top: 60px;
+  margin-left: 20px;
 
   @media (max-width: 768px) {
     padding: 15px;
@@ -225,6 +224,9 @@ const ModalContent = styled.div`
 
   @media (max-width: 480px) {
     padding: 10px;
+    width: 100%;
+    margin-top: 40px;
+    margin-left: 10px;
   }
 `;
 

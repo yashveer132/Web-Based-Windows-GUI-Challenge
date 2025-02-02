@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Rnd } from "react-rnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,33 +9,33 @@ import {
   faWindowRestore,
 } from "@fortawesome/free-solid-svg-icons";
 
+// Utility to check screen size
+const isSmallScreen = () => window.innerWidth <= 600;
+
 const StyledRnd = styled(Rnd)`
   background-color: var(--window-bg);
   border: 1px solid var(--window-border);
   display: flex;
   flex-direction: column;
   box-shadow: ${(props) =>
-    props.isActive ? "0 0 10px rgba(0,0,0,0.5)" : "none"};
+    props.$isActive ? "0 0 10px rgba(0,0,0,0.5)" : "none"};
   overflow: hidden;
   width: 100%;
   height: 100%;
-  @media (max-width: 1024px) {
-    min-width: 70vw !important;
-    min-height: 50vh !important;
-  }
-  @media (max-width: 768px) {
-    min-width: 85vw !important;
-    min-height: 60vh !important;
-  }
-  @media (max-width: 480px) {
-    min-width: 95vw !important;
-    min-height: 70vh !important;
-  }
+
+  ${({ $isMaximized }) =>
+    $isMaximized &&
+    `
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+  `}
 `;
 
 const TitleBar = styled.div`
   background-color: ${(props) =>
-    props.isActive
+    props.$isActive
       ? "var(--window-title-active)"
       : "var(--window-title-inactive)"};
   color: #fff;
@@ -110,10 +110,7 @@ const Window = ({
   width,
   height,
 }) => {
-  const [isFullScreen, setIsFullScreen] = useState(false);
-
   const handleMaximizeToggle = () => {
-    setIsFullScreen(!isFullScreen);
     onMaximize(id);
   };
 
@@ -123,29 +120,44 @@ const Window = ({
 
   return (
     <StyledRnd
-      default={{ x: 40, y: 3, width: 1200, height: 580 }}
-      minWidth={200}
-      minHeight={150}
+      default={{
+        x: window.innerWidth > 768 ? 40 : 0,
+        y: window.innerWidth > 768 ? 30 : 0,
+        width: window.innerWidth > 768 ? 600 : "95%",
+        height: window.innerWidth > 768 ? 400 : "80%",
+      }}
+      minWidth={300}
+      minHeight={200}
       bounds="window"
       onMouseDown={onFocus}
-      isActive={isActive}
-      enableResizing={!isFullScreen}
-      disableDragging={isFullScreen}
-      size={isFullScreen ? { width: "100vw", height: "100vh" } : undefined}
-      position={isFullScreen ? { x: 0, y: 0 } : undefined}
+      $isActive={isActive}
+      $isMaximized={isMaximized}
+      enableResizing={!isMaximized}
+      disableDragging={isMaximized}
+      size={
+        isMaximized
+          ? { width: "100vw", height: "100vh" }
+          : { width, height }
+      }
+      position={isMaximized ? { x: 0, y: 0 } : { x, y }}
       style={{ zIndex: isActive ? 999 : 998 }}
     >
-      <TitleBar isActive={isActive}>
+      <TitleBar $isActive={isActive}>
         <Title>{title}</Title>
         <ButtonGroup>
           <WindowButton onClick={() => onMinimize(id)}>
             <FontAwesomeIcon icon={faWindowMinimize} />
           </WindowButton>
-          <WindowButton onClick={handleMaximizeToggle}>
-            <FontAwesomeIcon
-              icon={isFullScreen ? faWindowRestore : faWindowMaximize}
-            />
-          </WindowButton>
+
+          {/* Conditionally render the maximize/restore button */}
+          {!isSmallScreen() && (
+            <WindowButton onClick={handleMaximizeToggle}>
+              <FontAwesomeIcon
+                icon={isMaximized ? faWindowRestore : faWindowMaximize}
+              />
+            </WindowButton>
+          )}
+
           <WindowButton onClick={() => onClose(id)}>
             <FontAwesomeIcon icon={faTimes} />
           </WindowButton>
