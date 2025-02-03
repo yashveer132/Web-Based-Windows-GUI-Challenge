@@ -124,35 +124,88 @@ function InnerApp({ currentUser, onLogin, onLogout }) {
   const handleContextMenu = useCallback(
     (e) => {
       e.preventDefault();
+      const sortBySubMenu = [
+        {
+          label: "Name",
+          icon: "🔤",
+          onClick: () => addNotification("Sorted by Name"),
+        },
+        {
+          label: "Size",
+          icon: "📏",
+          onClick: () => addNotification("Sorted by Size"),
+        },
+        {
+          label: "Item type",
+          icon: "📁",
+          onClick: () => addNotification("Sorted by Type"),
+        },
+        {
+          label: "Date modified",
+          icon: "📅",
+          onClick: () => addNotification("Sorted by Date"),
+        },
+      ];
+
+      const menuItems = [
+        {
+          label: "View",
+          icon: "👁️",
+          subMenu: [
+            {
+              label: "Large icons",
+              onClick: () => addNotification("View: Large icons"),
+            },
+            {
+              label: "Medium icons",
+              onClick: () => addNotification("View: Medium icons"),
+            },
+            {
+              label: "Small icons",
+              onClick: () => addNotification("View: Small icons"),
+            },
+            { type: "separator" },
+            {
+              label: "Auto arrange icons",
+              onClick: () => addNotification("Auto arrange icons"),
+            },
+            {
+              label: "Align icons to grid",
+              onClick: () => addNotification("Align icons to grid"),
+            },
+          ],
+        },
+        { label: "Sort by", icon: "🔃", subMenu: sortBySubMenu },
+        {
+          label: "Refresh",
+          icon: "🔄",
+          onClick: () => {
+            loadIconsFromLocalStorage();
+            addNotification("Desktop refreshed.");
+          },
+        },
+        { type: "separator" },
+        { label: "Display settings", icon: "🖥️" },
+        {
+          label: "Personalize",
+          icon: "🎨",
+          onClick: () => openWindow("Personalization"),
+        },
+      ];
+
       setContextMenu({
         x: e.clientX,
         y: e.clientY,
-        items: [
-          { label: "Sort By" },
-          { label: "Name", onClick: () => addNotification("Sorted by Name") },
-          { label: "Size", onClick: () => addNotification("Sorted by Size") },
-          { label: "Type", onClick: () => addNotification("Sorted by Type") },
-          {
-            label: "Date Modified",
-            onClick: () => addNotification("Sorted by Date"),
-          },
-          { type: "separator" },
-          {
-            label: "Refresh",
-            onClick: () => {
-              loadIconsFromLocalStorage();
-              addNotification("Desktop refreshed.");
-            },
-          },
-          { type: "separator" },
-          {
-            label: "Personalize",
-            onClick: () => openWindow("Personalization"),
-          },
-        ],
+        items: menuItems,
       });
     },
-    [addNotification, loadIconsFromLocalStorage, openWindow]
+    [
+      addNotification,
+      loadIconsFromLocalStorage,
+      openWindow,
+      createFolder,
+      createFile,
+    ]
   );
 
   const handleCloseContextMenu = useCallback(() => {

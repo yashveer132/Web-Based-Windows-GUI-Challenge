@@ -56,7 +56,7 @@ The project replicates key OS components to deliver a robust user experience. Be
 
 ### **2. Taskbar**
 - **Start Menu:** Provides access to applications, search functionality, user display name, and system options like logout, restart, and shutdown.  
-- **System Tray:** Displays network status, volume control, battery levels, Bluetooth status, and a real-time clock.  
+- **System Tray:** Displays network status, volume control, battery levels, Bluetooth status, airplane mode and a real-time clock.  
 - **Running Applications:** Shows tabs for open applications, allowing easy switching between tasks.  
 
 ---
